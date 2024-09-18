@@ -55,6 +55,15 @@
                         </li>
                         <li>
                             <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                                <span class="nav-text">payment Refunding</span>
+                            </a>
+                            <ul aria-expanded="false">
+                                <li><a href="{{ route('refunding_payment') }}">Refunding Payment</a></li>
+                                <li><a href="{{ route('refunding_approve_list') }}">Payment Approve </a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                                 <span class="nav-text">Bank-Acc-Setup</span>
                             </a>
                             <ul aria-expanded="false">
@@ -146,6 +155,7 @@
                                <li><a href="{{ route('total_supplier_report') }}">All Supplier Report</a></li>
                                 <li><a href="{{ route('individual_date_report_supplier') }}">Individual date report</a></li>
                                 <li><a href="{{ route('to_and_date_report') }}">Total & Date to Date Report</a></li>
+                                <li><a href="{{ route('date_wise_sup_report') }}">Date wise supplir report</a></li>
                             </ul>
                         </li>
                         <li>
@@ -157,10 +167,13 @@
                                 <li><a href="{{ route('customer_wise_report') }}">Customer Wise Report</a></li>
                                 <li><a href="{{ route('all_customer_report') }}">All Customer Report</a></li>
                                 <li><a href="{{ route('individual_date_report_cus') }}">Individual date report</a></li>
-                                <li><a href="{{ route('to_and_date_report_cus') }}">Total & Date to Date Report</a></li>
-                                <li><a href="{{ route('customer_wise_sale_report') }}">Customer wise Sale Report</a></li>
+                                <li><a href="{{ route('to_and_date_report_cus') }}">Sale Balance Sheet</a></li>
+                                <li><a href="{{ route('customer_wise_sale_report') }}"> Sale Report Date wise</a></li>
+                                <li><a href="{{ route('consumptionreport') }}">Consumption</a></li>
+
                             </ul>
                         </li>
+                        <li><a href="{{ route('refunding_report') }}">Refunding Report</a></li>
                         <li><a href="{{ route('store_wise_report') }}">Store Wise Report</a></li>
                         <li><a href="{{ route('mode_wise_report') }}">Mode Wise Report</a></li>
                         <li><a href="{{ route('head_wise_report') }}">Head Wise Report</a></li>
@@ -187,6 +200,15 @@
             </li>
             <li class="nav-label last">Main End</li>
             </ul>
+
+
+            <div class="copyright">
+                <div class="image-bx apps_install">
+                    <a href="{{ asset('public/gulf.apk') }}"><img src="{{asset('public')}}/images/icon-android.png" style="width:60%;" alt=""></a>
+                </div>
+                <p><strong>S-Alam-Readymix-Plant</strong> © {{ now()->format('Y') }} All Rights Reserved</p>
+                <p class="fs-12">Made with <span class="heart"></span> GoalCraftit.com</p>
+            </div>
     </div>
     <!--**********************************
                 Sidebar end

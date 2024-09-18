@@ -530,6 +530,8 @@ hr {
   border-radius: 6px;
 }
 
+
+
 @media (max-width: 767px) {
   .invoice-container {
     padding: 35px 20px 70px 20px;

@@ -132,6 +132,7 @@ Route::group(['middleware' => ['auth']], function(){
           Route::get('/get_store_wise_report',[reportController::class,'getStoreWiseReport'])->name('get_store_wise_report');
           Route::get('/mode_wise_report',[reportController::class,'modeWiseReport'])->name('mode_wise_report');
           Route::get('/get_modeWiseReport',[reportController::class,'getModeWiseReport'])->name('get_modeWiseReport');
+          Route::get('/get_modewise_invoice',[reportController::class,'getModewiseInvoice'])->name('get_modewise_invoice');
           Route::get('/head_wise_report',[reportController::class,'headWiseReport'])->name('head_wise_report');
           Route::get('/get_head_wise_report',[reportController::class,'getHeadWiseReport'])->name('get_head_wise_report');
           Route::get('/advanced_salary_report',[reportController::class,'advancedSalaryReport'])->name('advanced_salary_report');
@@ -160,6 +161,15 @@ Route::group(['middleware' => ['auth']], function(){
           Route::get('/get_cus_totaldate_invoice', [reportController::class, 'getCusTotaldateInvoice'])->name('get_cus_totaldate_invoice');
           Route::get('/customer_wise_sale_report', [reportController::class, 'customerWiseSaleReport'])->name('customer_wise_sale_report');
           Route::get('/getcuswisesalereport', [reportController::class, 'getcuswisesalereport'])->name('getcuswisesalereport');
+          Route::get('/refunding_report',[reportController::class, 'refundingReport'])->name('refunding_report');
+          Route::get('/get_refunding_report',[reportController::class, 'getRefundingReport'])->name('get_refunding_report');
+          Route::get('/date_wise_sup_report',[reportController::class, 'dateWiseSupReport'])->name('date_wise_sup_report');
+          Route::get('/get_sup_totalpur_report',[reportController::class, 'getSupTotalpurReport'])->name('get_sup_totalpur_report');
+          Route::get('/get_sup_total_invoice', [reportController::class, 'getSupTotalInvoice'])->name('get_sup_total_invoice');
+          Route::get('/consumptionreport', [reportController::class, 'consumptionreport'])->name('consumptionreport');
+          Route::get('/get_consumption_report', [reportController::class, 'getConsumptionReport'])->name('get_consumption_report');
+          Route::get('/get_totalconsumption_invoice', [reportController::class, 'getTotalconsumptionInvoice'])->name('get_totalconsumption_invoice');
+
 
           // Bank account Setup route
 
@@ -245,6 +255,7 @@ Route::group(['middleware' => ['auth']], function(){
               Route::PATCH('ad_salary_cancaled/{id}',[salaryController::class,'adSalaryCancaled'])->name('ad_salary_cancaled');
               Route::get('pay_salary',[salaryController::class,'paySalary'])->name('pay_salary');
               Route::get('get_adv_salary',[salaryController::class,'getAdvSalary'])->name('get_adv_salary');
+              Route::get('get_padv_salary',[salaryController::class,'getPadvSalary'])->name('get_padv_salary');
               Route::post('store_paid_salary',[salaryController::class,'storePaidSalary'])->name('store_paid_salary');
               Route::get('edit_paid_salary',[salaryController::class,'editPaidSalary'])->name('edit_paid_salary');
               Route::post('update_paid_salary/{id}',[salaryController::class,'updatePaidSalary'])->name('update_paid_salary');
@@ -277,6 +288,22 @@ Route::group(['middleware' => ['auth']], function(){
               Route::get('loan_paid_approve',[AccountController::class,'loanPaidApprovelist'])->name('loan_paid_approve');
               Route::PATCH('paidloan_approve/{id}',[AccountController::class,'paidloanApprove'])->name('paidloan_approve');
               Route::PATCH('paidloan_cancaled/{id}',[AccountController::class,'paidloanCancaled'])->name('paidloan_cancaled');
+
+
+              // payment payable route
+
+           Route::get('/refunding_payment',[AccountController::class,'refundingPayment'])->name('refunding_payment');
+           Route::post('/store_refunding',[AccountController::class,'storeRefunding'])->name('store_refunding');
+           Route::get('/refun_payment_edit',[AccountController::class,'refunPaymentEdit'])->name('refun_payment_edit');
+           Route::post('/update_refun_data',[AccountController::class,'updateRefunData'])->name('update_refun_data');
+           Route::get('/refunding_approve_list',[AccountController::class,'refundingApproveList'])->name('refunding_approve_list');
+           Route::PATCH('/refunding_payment_approve/{id}',[AccountController::class,'refundingPaymentApprove'])->name('refunding_payment_approve');
+
+
+
+
+
+
 
 
 

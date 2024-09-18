@@ -74,6 +74,7 @@ return array(
     'App\\Models\\payment\\PaymentLand' => $baseDir . '/app/Models/payment/PaymentLand.php',
     'App\\Models\\purchase\\Purchase' => $baseDir . '/app/Models/purchase/Purchase.php',
     'App\\Models\\purchase\\PurchaseDetails' => $baseDir . '/app/Models/purchase/PurchaseDetails.php',
+    'App\\Models\\refundingPayment' => $baseDir . '/app/Models/refundingPayment.php',
     'App\\Models\\roleAccess' => $baseDir . '/app/Models/roleAccess.php',
     'App\\Models\\stockValue' => $baseDir . '/app/Models/stockValue.php',
     'App\\Models\\transection' => $baseDir . '/app/Models/transection.php',

@@ -30,9 +30,9 @@
             <img id="logo" src="{{ asset('/public/logo.png') }}" title="Koice" alt="Koice" width="100px" />
          </div>
          
-         <div class="col-sm-5 text-center text-sm-end">
-            <h2 class="mb-0">Invoice</h2>
-            <p class="mb-0">Invoice Number - 17004</p>
+         <div class="col-sm-11 text-center text-sm-end" style="margin-top: -44px;margin-left:57px">
+            <h4 class="text-center" style="font-weight: 700;">S. Alam Readymix Concrete Plant</h4>
+            <h6 class="text-center" style="font-weight: 500;">All Purchases Materials</h6>
          </div>
       </div>
    <hr>
@@ -40,59 +40,47 @@
    <!-- Main Content -->
 
    <main>
-      <div class="row"> 
-        <div class="col-md-6">
-            <div class="row">
-                <div>
-                    <address>
-                       <b>Supplier : {{ $info->company_name }}</b><br />
-                      <b> Address: {{ $info->Address }}</b><br />
-                        <b>Contact No : {{ $info->mobile_no }}</b><br />
-                       
-                     </address>
-                </div>
-            </div>
+    <div class="row">     
+        <div class="text-center">
+           <p style="font-size: 22px; font-weight: bold; text-decoration: underline; margin-bottom: 0;">Purchase Material</p>
+           <p>Date: {{ $formdate }} to {{ $enddate }}</p>
         </div>
-        <div class="col-md-6">
-            <div class="row">
-                <strong style="text-align: end">Date: {{ now()->format('d-m-Y') }}</strong>
-            </div>
-        </div>    
-      </div>
+     </div>
 
    	<div class="table-responsive">
    	  <table class="table border mb-0">
             <thead style="font-weight: 600;">
                <tr class="bg-light text-center">
-                  <td>SL.NO</td>
-                  <td>Material</td>
-                  <td>Unit</td>
-                  <td>Challan-NO</td>
-                  <td>Truck-NO</td>
-                  <td>Truck-fee</td>
-                  <td>Qty</td>
-                  <td>Unit-Price</td>			
-                  <td>Sub-Total</td>			
+                <th>SL.No</th>
+                <th>Date</th>
+                <th>Challan-No</th>
+                <th>Truck-No</th>
+                <th>Types</th>
+                <th>Qty</th>
+                <th>Unit-price</th>
+                <th>Balance</th>			
                </tr>
             </thead>
 
             <tbody class="text-center">
-                @foreach ($details as $item )
+                @foreach ($purdetails as $purchase)
+                @foreach ($purchase->purchaseDetails as $item)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $item->material->name}}</td>
-                    <td>{{ $item->unit->name}}</td>
-                    <td>{{ $item->challan_no}}</td>
-                    <td>{{ $item->truck_no}}</td>
-                    <td>{{ $item->truck_fee }}</td>
+                    <td>{{ $loop->parent->iteration }}</td>
+                    <td>{{ $purchase->order_date }}</td>
+                    <td>{{ $item->challan_no }}</td>
+                    <td>{{ $item->truck_no }}</td>
+                    <td>{{ $item->material->name }}</td>
                     <td>{{ $item->Qty }}</td>
                     <td>{{ $item->unit_price }}</td>
                     <td>{{ $item->sub_total }}</td>
+                
                 </tr>
+                @endforeach
                 @endforeach
               
                <tr class="bg-light">              
-                  <th colspan="8" class="text-end">Total Amount</th>
+                  <th colspan="7" class="text-end">Total Amount</th>
                   <th>{{ $total }}</th>
                </tr>
                

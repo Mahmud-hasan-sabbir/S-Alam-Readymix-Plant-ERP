@@ -6,7 +6,7 @@
                 <!-- card header -->
                 <div class="card-header">
                     <h4 class="card-title">
-                        Customer Wise Sale Report
+                       Sale Report Date wise
                     </h4>
                     <div>
                         <button id="print" class="btn btn-sm btn-success"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Print</button>
@@ -20,26 +20,21 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <div class="row">
-                                    <label class="col-md-4 col-form-label font-weight-bold" >Date</label>
+                                    <label class="col-md-4 col-form-label font-weight-bold" >Form Date</label>
                                     <div class="col-md-8">
-                                        <input type="date" name="date" id="date" style="margin-left: 10px"  class="form-control">
+                                        <input type="date" name="formdate" id="fdate" style="margin-left: 10px"  class="form-control">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-5">
                                 <div class="row">
-                                    <label class="col-md-4 col-form-label font-weight-bold">Customer Name</label>
+                                    <label class="col-md-4 col-form-label font-weight-bold" >End Date</label>
                                     <div class="col-md-8">
-                                        <select name="supplier_id" id="customerId" class="form-control dropdwon_select">
-                                            <option value="" selected disabled>Select Customer</option>
-                                            @foreach($allSallerName as $item)
-                                            <option value="{{ $item->id }}">{{ $item->company_name }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input type="date" name="enddate" id="edate" style="margin-left: 10px"  class="form-control">
                                     </div>
                                 </div>
-
                             </div>
+
                             <div class="col-md-2">
                                 <div class="row">
                                     <div class="col-md-8">
@@ -55,9 +50,9 @@
                                 <thead class="thead-dark" style="display: none">
                                     <tr>
                                         <th>SL.No</th>
-                                        <th>INV-NO</th>
+                                        <th>Date</th>
+                                        <th>Customer Name</th>
                                         <th>Grade</th>
-                                        <th>Location</th>
                                         <th>Qty(m3)</th>
                                         <th>Qty(CFT)</th>
                                         <th>Unit price (CFT)</th>
@@ -81,13 +76,13 @@
 
 <script>
     $(document).on('click', '#filter', function(){
-        var date = $('#date').val();
-        var customerId = $('#customerId').val();
+        var fdate = $('#fdate').val();
+        var edate = $('#edate').val();
        $.ajax({
            url: '{{ route('getcuswisesalereport') }}',
            method: 'GET',
            dataType: "html",
-           data: { date ,customerId},
+           data: { fdate ,edate},
            success: function(response){
                console.log(response);
 
@@ -105,9 +100,9 @@
 
 
    $(document).on('click', '#print', function(){
-        var date = $('#date').val();
-        var customerId = $('#customerId').val();
-        window.location.href = '{{ route('generate_sale_invoice') }}' + '?date=' + date + '&customerId=' + customerId;
+        var fdate = $('#fdate').val();
+        var edate = $('#edate').val();
+        window.location.href = '{{ route('generate_sale_invoice') }}' + '?fdate=' + fdate + '&edate=' + edate;
     });
 </script>
 

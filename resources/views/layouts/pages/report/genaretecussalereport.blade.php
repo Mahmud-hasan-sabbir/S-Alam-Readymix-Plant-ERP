@@ -7,6 +7,13 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <link href="{{ asset('/public/logo.png') }}" rel="icon" />
    <title>Invoice</title>
+
+   <!-- Web Fonts
+   ======================= -->
+   {{-- <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900' type='text/css'> --}}
+
+   <!-- Stylesheet
+   ======================= -->
    <link rel="stylesheet" type="text/css" href="{{ asset('/public/bootstrap.min.css') }}">
    <link rel="stylesheet" type="text/css" href="{{ asset('/public/all.min.css') }}">
    <link rel="stylesheet" type="text/css" href="{{ asset('/public/stylesheet.css') }}">
@@ -23,9 +30,9 @@
             <img id="logo" src="{{ asset('/public/logo.png') }}" title="Koice" alt="Koice" width="100px" />
          </div>
          
-         <div class="col-sm-5 text-center text-sm-end">
-            <h2 class="mb-0">Invoice</h2>
-            <p class="mb-0">Invoice Number - 00001</p>
+         <div class="col-sm-11 text-center text-sm-end" style="margin-top: -44px;margin-left:57px">
+            <h4 class="text-center" style="font-weight: 700;">S. Alam Readymix Concrete Plant</h4>
+            <h6 class="text-center" style="font-weight: 500;">All Sales Materials</h6>
          </div>
       </div>
    <hr>
@@ -33,54 +40,47 @@
    <!-- Main Content -->
 
    <main>
-      <div class="row"> 
-        <div class="col-md-6">
-            <div class="row">
-                <div>
-                    <address>
-                       <b>Customer Name : {{ $customer->company_name }} </b><br />
-                      <b> Address: {{ $customer->Address }}</b><br />
-                        <b>Contact No : {{ $customer->mobile_no }}</b><br />
-                       
-                     </address>
-                </div>
-            </div>
+    <div class="row">     
+        <div class="text-center">
+           <p style="font-size: 22px; font-weight: bold; text-decoration: underline; margin-bottom: 0;">Purchase Material</p>
+           <p>Date: {{ $formdate }} to {{ $enddate }}</p>
         </div>
-        <div class="col-md-6">
-            <div class="row">
-                <strong style="text-align: end">Date: {{ now()->format('m-d-Y') }}</strong>
-            </div>
-        </div>    
-      </div>
+     </div>
 
    	<div class="table-responsive">
    	  <table class="table border mb-0">
             <thead style="font-weight: 600;">
                <tr class="bg-light text-center">
                 <th>SL.No</th>
-                <th>INV-NO</th>
+                <th>Date</th>
+                <th>Customer Name</th>
                 <th>Grade</th>
-                <th>Location</th>
                 <th>Qty(m3)</th>
                 <th>Qty(CFT)</th>
                 <th>Unit price (CFT)</th>
-                <th>Sub-Total</th>		
+                <th>Sub-Total</th>			
                </tr>
             </thead>
 
             <tbody class="text-center">
-                @foreach ($detail as $item)
+                @foreach ($data as $item)
                 <tr>
                     <td scope="col">{{ $loop->iteration }}</td>
-                    <td scope="col">{{ $item->invoice->inv_no }}</td>
-                    <td scope="col">{{ $item->grade->name}}</td>
-                    <td scope="col">{{ $item->location}}</td>
+                    <td scope="col">{{ $item->date }}</td>
+                    <td scope="col">{{ $item->company_name}}</td>
+                    <td scope="col">{{ $item->grade}}</td>
                     <td scope="col">{{ $item->qty_m3}}</td>
                     <td scope="col">{{ $item->qty_cft}}</td>
                     <td scope="col">{{ $item->unit_price_cft}}</td>
                     <td scope="col">{{ $item->sub_total}}</td>
                 </tr>
                 @endforeach
+              
+               <tr class="bg-light">              
+                  <th colspan="7" class="text-end">Total Amount</th>
+                  <th>{{ $formattedTotalamount }}</th>
+               </tr>
+               
             </tbody>
    	  </table>
    	</div>

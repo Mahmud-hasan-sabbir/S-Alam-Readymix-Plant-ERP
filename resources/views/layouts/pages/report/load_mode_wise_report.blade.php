@@ -3,6 +3,7 @@
     <td scope="col"></td>
     <td scope="col"></td>
     <td scope="col"></td>
+    <td scope="col"></td>
     <td scope="col">Opening Balance</td>
     <td scope="col"></td>
     <td scope="col"></td>
@@ -11,14 +12,15 @@
 
 
 
-@foreach ($getmode as $item )
+@foreach ($getmode as $item)
 <tr>
     <td scope="col">{{ $loop->iteration }}</td>
     <td scope="col">{{ $item->VDate }}</td>
-    <td scope="col">{{ $item->UpdateBy}}</td>
-    <td scope="col">{{ $item->Description}}</td>
-    <td scope="col">{{ $item->Debit}}</td>
-    <td scope="col">{{ $item->Credit}}</td>
+    <td scope="col">{{ $item->company_name }}</td>
+    <td scope="col">{{ $item->UpdateBy }}</td>
+    <td scope="col">{{ $item->Description }}</td>
+    <td scope="col">{{ $item->Debit }}</td>
+    <td scope="col">{{ $item->Credit }}</td>
     <td scope="col">{{ $item->balance }}</td>
 </tr>
 @endforeach
@@ -30,7 +32,10 @@
         <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
 
         </td>
-       
+         <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
+
+        </td>
+
         <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
 
         </td>

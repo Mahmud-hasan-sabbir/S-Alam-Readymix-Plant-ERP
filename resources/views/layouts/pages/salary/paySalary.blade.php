@@ -20,6 +20,7 @@
                                     <th>Salary</th>
                                     <th>ad_salary</th>
                                     <th>Paid Salary</th>
+                                    <th>Absence</th>
                                     <th>Month</th>
                                     <th>Mode</th>
                                     <th>Date</th>
@@ -28,19 +29,20 @@
                             </thead>
                             <tbody>
                                 @foreach ($paidsalary as $item)
-                                    <tr>
+                                    <tr style="{{ $item->status == 1 ? 'background-color: #cfad57 !important; color: black' : '' }}">
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->employee->company_name }}</td>
                                         <td>{{ $item->employee->desig->name }}</td>
                                         <td>{{ $item->employee->salary }}</td>
                                         <td>{{ $item->adv_salary }}</td>
                                         <td>{{ $item->paid_salary }}</td>
+                                        <td>{{ $item->absence??0 }}</td>
                                         <td>{{ $item->month }}</td>
                                         <td>{{ $item->pay_mode }}</td>
                                         <td>{{ $item->date }}</td>
                                         <td>
                                             <div style="width: 128px">
-                                                <button type="button"  class="btn btn-sm btn-success p-1 px-2" id="edit_data"  data-id="{{ $item->id }}" style="margin-left: -15px"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>Edit</button>
+                                                <button type="button" {{ $item->status == 1 ? 'disabled' : '' }} class="btn btn-sm btn-success p-1 px-2" id="edit_data"  data-id="{{ $item->id }}" style="margin-left: -15px"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>Edit</button>
                                                 <button type="button"  class="btn btn-sm btn-info p-1 px-2" id="view_data"  data-id="{{ $item->id }}" style="float: right"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
                                             </div>
 
@@ -97,6 +99,25 @@
                         <div class="row mt-2">
                             <div class="col-md-6">
                                 <div class="row">
+                                    <label class="col-md-5 col-form-label" for="designation"> Designation: </label>
+                                    <div class="col-md-7">
+                                        <input type="text"  class="form-control" readonly id="designation" name="designation">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <label class="col-md-5 col-form-label" for="per_number">Absence</label>
+                                    <div class="col-md-7">
+                                        <input type="text"  class="form-control" id="absense" name="absence">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <div class="row">
                                     <label class="col-md-5 col-form-label" for="designation"> Month: </label>
                                     <div class="col-md-7">
                                         <select name="month" id="month" required class="form-control">
@@ -125,7 +146,7 @@
                                     </div>
                                 </div>
                             </div>
-                           
+
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
@@ -244,6 +265,7 @@
             success: function (response) {
                 console.log(response);
                 $('#currentSalary').val(response.salary);
+                $('#designation').val(response.designation_name);
             }
         });
     });
@@ -264,6 +286,8 @@
                  $('.bd-example-modal-lg').modal('show');
                  $('#employeeName').val(response.editpaidsalary.emp_id).prop('selected', true);
                  $('#employeeName').prop('disabled', true);
+                 $('#designation').val(response.editpaidsalary.employee.desig.name).prop('disabled', true);
+                 $('#absense').val(response.editpaidsalary.absence);
                  $('#currentSalary').val(response.currentSalary).prop('disabled', true);
                  $('#remarks').val(response.editpaidsalary.remarks);
                  $('#month').val(response.editpaidsalary.month).prop('selected', true);
@@ -321,6 +345,8 @@
                  $('.bd-example-modal-lg').modal('show');
                  $('#employeeName').val(response.editpaidsalary.emp_id).prop('selected', true);
                  $('#employeeName').prop('disabled', true);
+                 $('#designation').val(response.editpaidsalary.employee.desig.name).prop('disabled', true);
+                 $('#absense').val(response.editpaidsalary.absence).prop('disabled', true);
                  $('#currentSalary').val(response.currentSalary).prop('disabled', true);
                  $('#remarks').val(response.editpaidsalary.remarks).prop('disabled', true);
                  $('#month').val(response.editpaidsalary.month).prop('disabled', true);
@@ -500,7 +526,7 @@ $(document).on('change', '#bank_name', function() {
         var emp_id = $('#employeeName').val();
         var year = $('#year').val();
         var month = $(this).val();
-       
+
         $.ajax({
             url: "{{ route('get_adv_salary') }}",
             method: 'GET',
@@ -514,7 +540,7 @@ $(document).on('change', '#bank_name', function() {
             }
         });
     });
-    
+
 </script>
 
 

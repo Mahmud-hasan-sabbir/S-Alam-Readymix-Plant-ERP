@@ -22,7 +22,12 @@ class salaryController extends Controller
 
     public function getEmployeeSalary(Request $request)
     {
-        $employee = SallerInformation::where('id',$request->id)->first();
+        $employee = SallerInformation::
+        join('designations', 'designations.id', '=', 'saller_information.designation')
+        ->where('saller_information.id', $request->id)
+        ->select('saller_information.salary', 'designations.name as designation_name')
+        ->first();
+
         return response()->json($employee);
     }
 
@@ -60,7 +65,8 @@ class salaryController extends Controller
 
     public function editAdvancedSalary(Request $request)
     {
-        $editadsalary = advancedSalary::with('employee')->where('id',$request->id)->first();
+        $editadsalary = advancedSalary::with('employee.desig')->where('id',$request->id)->first();
+
 
         if($editadsalary->pay_mode == 'Cash')
         {
@@ -99,7 +105,7 @@ class salaryController extends Controller
     public function advancedSalaryView(Request $request)
     {
         $viewadsalary = advancedSalary::with('employee')->where('id',$request->id)->first();
-        $empname = $viewadsalary->employee->Saller_name;
+        $empname = $viewadsalary->employee->company_name;
         return response()->json([
             'viewadsalary' => $viewadsalary,
             'empname' => $empname,
@@ -115,8 +121,8 @@ class salaryController extends Controller
 
     public function adSalaryCancaled($id)
     {
-        advancedSalary::where('id', $id)->update(['status' => 2]);
-        $notification = ['messege' => 'Ad Salary cancaled successfully', 'alert-type' => 'success'];
+        advancedSalary::where('id', $id)->delete();
+        $notification = ['messege' => 'Ad Salary delete successfully', 'alert-type' => 'success'];
         return redirect()->back()->with($notification);
     }
 
@@ -132,8 +138,14 @@ class salaryController extends Controller
     {
         $getadsalary = advancedSalary::where('emp_id',$request->emp_id)->where('month',$request->month)->where('year',$request->year)->where('status',1)->sum('advanced_salary');
         return response()->json($getadsalary);
-    } 
-    
+    }
+    public function getPadvSalary(Request $request)
+    {
+        $getadsalary = advancedSalary::where('month',$request->month)->where('year',$request->year)->sum('advanced_salary');
+        return response()->json($getadsalary);
+    }
+
+
     public function storePaidSalary(Request $request)
     {
         $existingRecord = paidSalary::where('emp_id', $request->emp_id)
@@ -153,6 +165,7 @@ class salaryController extends Controller
         $storePaidSalary->pay_mode = $request->pay_mode;
         $storePaidSalary->bank_name = $request->bank_name;
         $storePaidSalary->acc_no = $request->acc_no;
+        $storePaidSalary->absence = $request->absence;
         $storePaidSalary->paid_salary = $request->paid_salary;
         $storePaidSalary->adv_salary = $request->adv_salary;
         $storePaidSalary->date = $request->date;
@@ -169,7 +182,7 @@ class salaryController extends Controller
 
     public function editPaidSalary(Request $request)
     {
-        $editpaidsalary = paidSalary::with('employee')->where('id',$request->id)->first();
+        $editpaidsalary = paidSalary::with('employee.desig')->where('id',$request->id)->first();
 
         if($editpaidsalary->pay_mode == 'Cash')
         {
@@ -190,6 +203,7 @@ class salaryController extends Controller
     {
         $updatepaidSalary = paidSalary::find($id);
         $updatepaidSalary->paid_salary = $request->paid_salary;
+        $updatepaidSalary->absence = $request->absence;
         $updatepaidSalary->date = $request->date;
         $updatepaidSalary->remarks = $request->remarks;
         $updatepaidSalary->save();
@@ -213,23 +227,23 @@ class salaryController extends Controller
 
     public function paidSalaryCancaled($id)
     {
-        paidSalary::where('id', $id)->update(['status' => 2]);
-        $notification = ['messege' => 'paid Salary cancaled successfully', 'alert-type' => 'success'];
+        paidSalary::where('id', $id)->delete();
+        $notification = ['messege' => 'paid Salary delete successfully', 'alert-type' => 'success'];
         return redirect()->back()->with($notification);
     }
 
     public function paidSalaryView(Request $request)
     {
         $viewpaidsalary = paidSalary::with('employee','bankname')->where('id',$request->id)->first();
-        $empname = $viewpaidsalary->employee->Saller_name;
+        $empname = $viewpaidsalary->employee->company_name;
         $bankname = $viewpaidsalary->bankname->bank_name ?? 'N/A';
-        
+
         return response()->json([
             'viewpaidsalary' => $viewpaidsalary,
             'empname' => $empname,
             'bankname' => $bankname,
-        ]); 
+        ]);
     }
-   
+
 
 }

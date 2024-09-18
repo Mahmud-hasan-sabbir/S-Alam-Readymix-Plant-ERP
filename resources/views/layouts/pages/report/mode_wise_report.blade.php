@@ -9,7 +9,7 @@
                       Mode Wise Tranjection Page
                     </h4>
                     <div>
-                        {{-- <a href=""  class="btn btn-sm btn-success"><i class="fa fa-print" aria-hidden="true"></i><span class="btn-icon-add"></span>Print</a> --}}
+                        <button id="print" class="btn btn-sm btn-success"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Print</button>
                         <a href="" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
                     </div>
 
@@ -53,7 +53,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
 
                             <div class="col-md-2">
                                 <div class="row">
@@ -70,6 +70,7 @@
                               <tr>
                                 <th >SL.No</th>
                                 <th >Date</th>
+                                <th >Particulars</th>
                                 <th >Mode Name</th>
                                 <th >Description</th>
                                 <th >Debit</th>
@@ -89,12 +90,12 @@
 </x-app-layout>
 
 <script>
-     $(document).on('click','#filter',function(){
+    $(document).on('click','#filter',function(){
         var startDate = $('#start_date').val();
         var endDate = $('#end_date').val();
         var headCode = $('#accountId').val();
-        
-       
+
+
             $.ajax({
                 url:'{{ route('get_modeWiseReport') }}',
                 method:'GET',
@@ -116,6 +117,20 @@
                 }
             });
 
+    });
+
+
+
+        $(document).on('click', '#print', function() {
+            var startDate = $('#start_date').val();
+            var endDate = $('#end_date').val();
+            var headCode = $('#accountId').val();
+
+            if (startDate && endDate && headCode) {
+                window.location.href = '{{ route('get_modewise_invoice') }}' + '?start_date=' + startDate + '&end_date=' + endDate + '&headCode=' + headCode;
+            } else {
+                alert('Please select a date range and supplier before printing.');
+            }
         });
 
 </script>

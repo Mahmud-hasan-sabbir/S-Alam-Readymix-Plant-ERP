@@ -1,54 +1,56 @@
 
 
-@foreach ($data as $item)
-<tr>
-    <td scope="col">{{ $loop->iteration }}</td>
-    <td scope="col">{{ $item->date }}</td>
-    <td scope="col">{{ $item->Address}}</td>
-    <td scope="col">{{ $item->grade}}</td>
-    <td scope="col">{{ $item->qty_m3}}</td>
-    <td scope="col">{{ $item->qty_cft}}</td>
-    <td scope="col">{{ $item->unit_price_cft}}</td>
-    <td scope="col">{{ $item->sub_total}}</td>
-</tr>
+
+@foreach ($purchases as $purchase)
+    @foreach ($purchase->purchaseDetails as $detail)
+    <tr>
+        <td>{{ $loop->parent->iteration }}</td>
+        <td>{{ $purchase->order_date }}</td>
+        <td>{{ $detail->challan_no }}</td>
+        <td>{{ $detail->truck_no }}</td>
+        <td>{{ $detail->material->name }}</td>
+        <td>{{ $detail->Qty }}</td>
+        <td>{{ $detail->unit_price }}</td>
+        <td>{{ $detail->sub_total }}</td>
+    </tr>
+    @endforeach
 @endforeach
 
 
+
+
 <t-footer style="display: none">
-<tr class="addr" >
-    
-    <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
+    <tr class="addr" >
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
 
-    </td>
+        </td>
+       
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
 
-    <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
 
-    </td>
-    <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
 
-    </td>
-    <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-        <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;">Total : </h6>
-    </td>
-    <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-        <h6 style="font-weight: bold;padding:0px;margin:0px" id="totalqty" >
-        </h6>
-    </td>
-    <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-        <h6 style="font-weight: bold;padding:0px;margin:0px" id="totalqtycft" >
-        </h6>
-    </td>
-    <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
-        <h6 style="font-weight: bold;padding:0px;margin:0px" id="" >
-        </h6>
-    </td>
-    <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
-        <h6 style="font-weight: bold;padding:0px;margin:0px" id="totalsub" >
-        </h6>
-    </td>
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
 
-
-</tr>
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+            <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;">Total Purchase Amount : </h6>
+        </td>
+        <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
+            <h6 style="font-weight: bold;padding:0px;margin:0px" id="" >
+            </h6>
+        </td>
+        <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
+            <h6 style="font-weight: bold;padding:0px;margin:0px" id="totalpurchaseamount" >
+            </h6>
+        </td>
+       
+      
+    </tr>
 </t-footer>
 
 <tr class="addr" >
@@ -238,30 +240,30 @@
 </tr>
 
 
-
-
 <script>
-    var totalpaymentamount = {{ $totalpaidamount }}; // Ensure this is a number
-    var formattedTotalamount = '{{ $formattedTotalamount }}'.replace(/,/g, ''); // Remove commas
-    var totalsumqty = '{{ $totalsumqty }}';
-    var totalsumqtycft = '{{ $totalsumqtycft }}';
-
-    // Convert formattedTotalamount to a float
-    var totalAmountNumber = parseFloat(formattedTotalamount);
-
-    // Calculate balance
-    var balance = totalAmountNumber - totalpaymentamount;
-    
-    // Determine payment status
+    var totalpurchaseamount = {{ $totalpurchaseamount }};
+    var totalpaymentamount = {{ $totalpaymentamount }};
+    var balance = totalpurchaseamount - totalpaymentamount;
     var paymentstatus = balance > 0 ? 'Due' : 'Paid';
-
-    // Update the DOM with values
+    document.getElementById('totalpurchaseamount').innerHTML = totalpurchaseamount;
     document.getElementById('totalpayment').innerHTML = totalpaymentamount;
-    document.getElementById('totalqty').innerHTML = totalsumqty;
-    document.getElementById('totalqtycft').innerHTML = totalsumqtycft;
-    document.getElementById('totalsub').innerHTML = formattedTotalamount;
-    document.getElementById('totalbil').innerHTML = formattedTotalamount;
+    document.getElementById('totalbil').innerHTML = totalpurchaseamount;
     document.getElementById('paidamount').innerHTML = totalpaymentamount;
-    document.getElementById('balance').innerHTML = balance.toFixed(2); 
+    document.getElementById('balance').innerHTML = balance;
     document.getElementById('paymentstatus').innerHTML = paymentstatus;
+
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

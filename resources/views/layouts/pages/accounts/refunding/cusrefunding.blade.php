@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title">
-                        Payment for supplier
+                        Payment for refunding
                     </h4>
                     <a href="" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-sm btn-success p-1 px-2">
                         <i class="fa fa-plus"></i><span class="btn-icon-add"></span>Create
@@ -16,7 +16,7 @@
                             <thead>
                                 <tr>
                                     <th>SL.NO</th>
-                                    <th>Supplier</th>
+                                    <th>Customer</th>
                                     <th>Mode</th>
                                     <th>Type</th>
                                     <th>Amount</th>
@@ -29,7 +29,7 @@
 
                                 <tr style="{{ $data->is_approve == 1 ? 'background-color: #cfad57 !important; color: black' : '' }}">
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $data->supplierName->company_name }}</td>
+                                    <td>{{ $data->customerName->company_name }}</td>
                                     <td>{{ $data->pay_mode }}</td>
                                     <td>{{ $data->pay_reason }}</td>
                                     <td>{{ $data->pay_amount }}</td>
@@ -61,15 +61,15 @@
                     </h5>
                     <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                 </div>
-                <form class="form-valide" action="{{ route('store_payment_supplier') }}" method="POST" enctype="multipart/form-data">
+                <form class="form-valide" action="{{ route('store_refunding') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body py-2 px-4">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group row">
-                                    <label for="" class="col-md-5">Supplier Name</label>
+                                    <label for="" class="col-md-5">Customer Name</label>
                                     <div class="col-md-7">
-                                        <select name="supplier_id" required id="supplierId" class="form-control dropdwon_select">
+                                        <select name="supplier_id" required id="customerId" class="form-control dropdwon_select">
                                             <option value="" selected disabled>Select a member name</option>
                                             @foreach ($allSupplier as $item)
                                                 <option value="{{ $item->id }}">{{ $item->company_name }}</option>
@@ -101,7 +101,7 @@
                                     <div class="col-md-7">
                                         <select name="pay_reason" required id="" class="form-control">
                                             <option value="" @selected(true) @disabled(true)>Select a payment reason</option>
-                                            <option value="Purchase Materials"> Purchase Materials</option>
+                                            <option value="payment refunding">payment refunding</option>
                                         </select>
                                     </div>
                                 </div>
@@ -187,16 +187,6 @@
                               </div>
                             </div>
                           </div>
-                          <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group row">
-                                    <label for="" class="col-md-5"> Discount Amount</label>
-                                    <div class="col-md-7">
-                                        <input type="number" name="dis_amount" required id="payamount" class="form-control" placeholder="Enter discount Amount">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="row">
                             <div class="col-md-12">
@@ -236,19 +226,19 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Edit Supplier payment</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Edit Refun payment</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-                <form class="form-valide" action="{{ route('update_supplier_payment') }}" method="POST" enctype="multipart/form-data">
+                <form class="form-valide" action="{{ route('update_refun_data') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-body py-2 px-4">
                             <input type="hidden" name="hidden_id" id="hiddenId">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group row">
-                                        <label for="" class="col-md-5">Supplier Name</label>
+                                        <label for="" class="col-md-5">Customer Name</label>
                                         <div class="col-md-7">
                                             <select name="supplier_id" @selected(true) disabled id="supplierIdedit" class="form-control dropdwon_select">
                                                 @foreach ($allSupplier as $item)
@@ -265,22 +255,11 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group row">
-                                        <label for="" class="col-md-5"> Total Amount</label>
-                                        <div class="col-md-7">
-                                            <input type="text" readonly id="totalamountedit" class="form-control">
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group row">
                                         <label for="" class="col-md-5"> Payment Reason</label>
                                         <div class="col-md-7">
                                             <select name="pay_reason" @selected(true) disabled id="reasonedit" class="form-control">
                                                 <option value="" @selected(true) @disabled(true)>Select a payment reason</option>
-                                                <option value="Purchase Materials"> Purchase Materials</option>
+                                                <option value="payment refunding">payment refunding</option>
                                             </select>
                                         </div>
                                     </div>
@@ -367,17 +346,6 @@
                                 </div>
                               </div>
 
-                              <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group row">
-                                        <label for="" class="col-md-5"> Discount Amount</label>
-                                        <div class="col-md-7">
-                                            <input type="number" name="dis_amount" id="discountamount" class="form-control" placeholder="Enter Payment Amount">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group row">
@@ -417,7 +385,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">View supplier Payment</h5>
+                <h5 class="modal-title" id="exampleModalLabel">View refunding Payment</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -429,7 +397,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group row">
-                                        <label for="" class="col-md-5">Supplier Name</label>
+                                        <label for="" class="col-md-5">Customer Name</label>
                                         <div class="col-md-7">
                                             <select name="supplier_id" id="supplierview" @selected(true) disabled class="form-control dropdwon_select">
                                                 <option value="" selected disabled>Select a member name</option>
@@ -444,17 +412,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group row">
-                                        <label for="" class="col-md-5"> Total Amount</label>
-                                        <div class="col-md-7">
-                                            <input type="text" readonly id="totalamountview" class="form-control">
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                           
 
                             <div class="row">
                                 <div class="col-md-12">
@@ -463,7 +421,7 @@
                                         <div class="col-md-7">
                                             <select name="pay_reason" @selected(true) disabled id="reasonview" class="form-control">
                                                 <option value="" @selected(true) @disabled(true)>Select a payment reason</option>
-                                                <option value="Purchase Materials"> Purchase Materials</option>
+                                                <option value="payment refunding">payment refunding</option>
                                             </select>
                                         </div>
                                     </div>
@@ -527,17 +485,6 @@
                                     <input type="date" name="check_date" readonly id="checkDateview" class="form-control">
                                     </div>
                                 </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group row">
-                                        <label for="" class="col-md-5"> Discount Amount</label>
-                                        <div class="col-md-7">
-                                            <input type="number" name="pay_amount" readonly id="discountview" class="form-control" placeholder="Enter Payment Amount">
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 
@@ -628,110 +575,53 @@ $(document).ready(function () {
         var checkNumberRow = $("#checkNumberEdit");
         var checkDateRow = $("#checkDateEdit");
         var bankNameRow = $("#bankNameRowEdit");
-        var cashaccrowedit = $('#cashaccountidrowedit');
-        var bankaccrowedit = $('#bankaccountidrowedit');
-
+        var cashaccountidrowedit = $("#cashaccountidrowedit");
+        var bankaccountidrowedit = $("#bankaccountidrowedit");
 
         if (payMode === "Bank") {
             checkNumberRow.show();
             checkDateRow.show();
             bankNameRow.show();
-            bankaccrowedit.show();
-            cashaccrowedit.hide();
+            bankaccountidrowedit.show();
+            cashaccountidrowedit.hide();
+            
+
         } else {
             checkNumberRow.hide();
             checkDateRow.hide();
             bankNameRow.hide();
-            bankaccrowedit.hide();
-            cashaccrowedit.show();
+            bankaccountidrowedit.hide();
+            cashaccountidrowedit.show();
         }
     }
 
     $(".edit").click(function () {
     var Id = $(this).data('id');
     $.ajax({
-        url: "{{ route('supplier_payment_edit') }}",
+        url: "{{ route('refun_payment_edit') }}",
         method: 'GET',
         dataType: 'JSON',
         data: {
             'id': Id,
         },
         success: function (response) {
-
+            console.log(response);
             $('#exampleModal').modal('show');
-            $('#hiddenId').val(response.supplierPaymentEdit.id);
-            $('#supplierIdedit').val(response.supplierPaymentEdit.supplier_id).trigger('change');
-            $('#totalamountedit').val(response.amountDue);
-            $('#reasonedit').val(response.supplierPaymentEdit.pay_reason);
-            $('#paymentModeEdit').val(response.supplierPaymentEdit.pay_mode);
+            $('#hiddenId').val(response.editrefun.id);
+            $('#customereditid').val(response.editrefun.cus_id).trigger('change');
+            $('#reasonedit').val(response.editrefun.pay_reason);
+            $('#paymentModeEdit').val(response.editrefun.pay_mode);
 
-            $('#bankNameedit').val(response.supplierPaymentEdit.bank_name);
-            $('#checkno').val(response.supplierPaymentEdit.check_num);
-            $('#checkDateedit').val(response.supplierPaymentEdit.check_date);
-            $('#paydate').val(response.supplierPaymentEdit.pay_date);
-
-
-            $('#payamountedit').val(response.supplierPaymentEdit.pay_amount);
-            $('#discountamount').val(response.supplierPaymentEdit.discount_amount);
+            $('#bankNameedit').val(response.editrefun.bank_name);
+            $('#checkno').val(response.editrefun.check_num);
+            $('#checkDateedit').val(response.editrefun.check_date);
+            $('#paydate').val(response.editrefun.pay_date);
             $('#cashtotalamountedit').val(response.value);
             $('#banktotalamountedit').val(response.value);
-            $('#remarks').val(response.supplierPaymentEdit.remarks);
+            $('#payamountedit').val(response.editrefun.pay_amount);
+            $('#remarks').val(response.editrefun.remarks);
 
-            $(document).on('change', '#supplierIdedit', function() {
-                var id = $(this).val();
-                alert(id);
-                $.ajax({
-                    url: "{{ route('get_totalamount_sup') }}",
-                    method: 'GET',
-                    dataType: 'JSON',
-                    data: {
-                        id: id
-                    },
-                    success: function(data) {
-                        console.log(data);
-
-                        $('#totalamountedit').val(data.amount_due);
-                    }
-                });
-            });
-
-            $(document).on('change', '#bankNameedit', function() {
-                var payMode = $(this).val();
-
-                $.ajax({
-                    url: "{{ route('get_currentaccount_bank') }}",
-                    method: 'GET',
-                    dataType: 'JSON',
-                    data: {
-                        id: payMode
-                    },
-                    success: function(data) {
-                        console.log(data);
-                        $('#banktotalamountedit').val(data.totalAmount);
-
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                    }
-                });
-            });
-
-            $(document).on('change', '#bankNameedit', function() {
-                var id = $(this).val();
-                $.ajax({
-                    url: "{{ route('get_acc_no') }}",
-                    method: 'GET',
-                    dataType: 'JSON',
-                    data: {
-                        id: id
-                    },
-                    success: function(data) {
-                        console.log(data);
-
-                        $('#checkno').val(data.acc_no);
-                    }
-                });
-            });
+          
 
             toggleFields();
 
@@ -768,7 +658,7 @@ $(document).ready(function () {
     $(".view").click(function () {
         var viewId = $(this).data('id');
         $.ajax({
-            url: "{{ route('supplier_payment_edit') }}",
+            url: "{{ route('refun_payment_edit') }}",
             method: 'GET',
             dataType: 'JSON',
             data: {
@@ -778,17 +668,15 @@ $(document).ready(function () {
 
                 console.log(response);
                 $('#exampleModalview').modal('show');
-                $('#supplierview').val(response.supplierPaymentEdit.supplier_id).trigger('change');
-                $('#totalamountview').val(response.amountDue);
-                $('#reasonview').val(response.supplierPaymentEdit.pay_reason);
-                $('#paymentModeview').val(response.supplierPaymentEdit.pay_mode);
-                $('#paydateview').val(response.supplierPaymentEdit.pay_date);
-                $('#bankNameview').val(response.supplierPaymentEdit.bank_name);
-                $('#checknoview').val(response.supplierPaymentEdit.check_num);
-                $('#checkDateview').val(response.supplierPaymentEdit.check_date);
-                $('#payamountview').val(response.supplierPaymentEdit.pay_amount);
-                $('#discountview').val(response.supplierPaymentEdit.discount_amount || 0);
-                $('#remarksview').val(response.supplierPaymentEdit.remarks);
+                $('#supplierview').val(response.editrefun.cus_id).trigger('change');
+                $('#reasonview').val(response.editrefun.pay_reason);
+                $('#paymentModeview').val(response.editrefun.pay_mode);
+                $('#paydateview').val(response.editrefun.pay_date);
+                $('#bankNameview').val(response.editrefun.bank_name);
+                $('#checknoview').val(response.editrefun.check_num);
+                $('#checkDateview').val(response.editrefun.check_date);
+                $('#payamountview').val(response.editrefun.pay_amount);
+                $('#remarksview').val(response.editrefun.remarks);
 
                 toggleFields();
             }
@@ -917,6 +805,24 @@ $(document).ready(function () {
         if (!valid) {
             event.preventDefault(); // Prevent form submission if not valid
         }
+    });
+    </script>
+
+    <script>
+     $(document).on('change', '#customerId', function() {
+        var id = $(this).val();
+        $.ajax({
+            url: "{{ route('get_totalamount') }}",
+            method: 'GET',
+            dataType: 'JSON',
+            data: {
+                id: id
+            },
+            success: function(data) {
+                console.log(data);
+                $('#totalamount').val(data.amount_due);
+            }
+        });
     });
     </script>
 

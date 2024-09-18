@@ -6,18 +6,18 @@
                 <!-- card header -->
                 <div class="card-header">
                     <h4 class="card-title">
-                     Total Purchase Report
+                    Refunding Report
                     </h4>
                     <div>
-                        <button id="print" class="btn btn-sm btn-success"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Print</button>
+
                         <a href="" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
                     </div>
 
                 </div>
                 <!-- card body -->
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-5">
+                    {{-- <div class="row">
+                        <div class="col-md-6">
                             <div class="row">
                                 <label class="col-md-4 col-form-label font-weight-bold" >Form</label>
                                 <div class="col-md-8">
@@ -26,15 +26,31 @@
                             </div>
                         </div>
 
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <div class="row">
                                 <label class="col-md-4 col-form-label font-weight-bold" >To</label>
                                 <div class="col-md-8">
-                                    <input type="date" id="end_date" style="margin-left: -55px" class="form-control">
+                                    <input type="date" id="end_date" style="margin-left: -94px" class="form-control">
                                 </div>
                             </div>
                         </div>
+                    </div> --}}
 
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label class="col-md-4 col-form-label font-weight-bold" >Customer Name</label>
+                                <div class="col-md-8">
+                                    <select name="land_id" id="customerId" class="form-control dropdwon_select">
+                                        <option value="" selected disabled>Select Customer</option>
+                                        @foreach($allSallerName as $item)
+                                        <option value="{{ $item->id }}">{{ $item->company_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
 
                         <div class="col-md-2">
                             <div class="row">
@@ -44,20 +60,14 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row mt-4">
                         <table class="table" id="data-table">
                             <thead class="thead-dark" style="display: none">
                                 <tr>
-                                    <th>SL.No</th>
-                                    <th>Date</th>
-                                    <th>Challan-No</th>
-                                    <th>Truck-No</th>
-                                    <th>Types</th>
-                                    <th>Qty</th>
-                                    <th>Unit-price</th>
-                                    <th>Balance</th>
-
+                                    <th>Advanced Amount</th>
+                                    <th>Materials Sales</th>
+                                    <th>Advanced Due</th>
+                                    <th>Refunding Amount</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody">
@@ -77,13 +87,12 @@
 
 <script>
     $(document).on('click', '#filter', function(){
-        var startDate = $('#start_date').val();
-        var endDate = $('#end_date').val();
+        var id = $('#customerId').val();
        $.ajax({
-           url: '{{ route('get_sup_totaldate_report') }}',
+           url: '{{ route('get_refunding_report') }}',
            method: 'GET',
            dataType: "html",
-           data: { startDate,endDate},
+           data: { id},
            success: function(response){
                console.log(response);
 
@@ -98,18 +107,6 @@
            }
        });
    });
-
-
-   $(document).on('click', '#print', function() {
-    var startDate = $('#start_date').val();
-    var endDate = $('#end_date').val();
-
-    if (startDate && endDate) {
-        window.location.href = '{{ route('get_sup_totaldate_invoice') }}' + '?start_date=' + startDate + '&end_date=' + endDate;
-    }else {
-        alert('Please select a date range and supplier before printing.');
-    }
-});
 </script>
 
 

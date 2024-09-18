@@ -1,9 +1,9 @@
-@foreach ($detail as $item)
+@foreach ($data as $item)
 <tr>
     <td scope="col">{{ $loop->iteration }}</td>
-    <td scope="col">{{ $item->invoice->inv_no }}</td>
-    <td scope="col">{{ $item->grade->name}}</td>
-    <td scope="col">{{ $item->location}}</td>
+    <td scope="col">{{ $item->date }}</td>
+    <td scope="col">{{ $item->company_name}}</td>
+    <td scope="col">{{ $item->grade}}</td>
     <td scope="col">{{ $item->qty_m3}}</td>
     <td scope="col">{{ $item->qty_cft}}</td>
     <td scope="col">{{ $item->unit_price_cft}}</td>
@@ -25,7 +25,7 @@
     <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
 
     </td>
-  
+
     <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
 
     </td>

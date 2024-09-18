@@ -27,18 +27,18 @@
                             </thead>
                             <tbody>
                                 @foreach ($adsalary as $item)
-                                    <tr>
+                                    <tr style="{{ $item->status == 1 ? 'background-color: #cfad57 !important; color: black' : '' }}">
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->employee->company_name }}</td>
                                         <td>{{ $item->employee->desig->name }}</td>
-                                        <td>{{ $item->employee->Salary }}</td>
+                                        <td>{{ $item->employee->salary }}</td>
                                         <td>{{ $item->advanced_salary }}</td>
                                         <td>{{ $item->month }}</td>
                                         <td>{{ $item->pay_mode }}</td>
                                         <td>{{ $item->date }}</td>
                                         <td>
                                             <div>
-                                                <button type="button"  class="btn btn-sm btn-success p-1 px-2" id="edit_data"  data-id="{{ $item->id }}" style="margin-left: -15px"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>Edit</button>
+                                                <button type="button" {{ $item->status == 1 ? 'disabled' : '' }} class="btn btn-sm btn-success p-1 px-2" id="edit_data"  data-id="{{ $item->id }}" style="margin-left: -15px"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>Edit</button>
                                                 <button type="button"  class="btn btn-sm btn-info p-1 px-2" id="view_data"  data-id="{{ $item->id }}" style="float: right"><i class="fa fa-folder-open"></i></i><span class="btn-icon-add"></span>View</button>
                                             </div>
 
@@ -90,7 +90,25 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <label class="col-md-5 col-form-label" for="designation"> Designation: </label>
+                                    <div class="col-md-7">
+                                        <input type="text" required class="form-control" readonly id="designation" name="designation">
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <label class="col-md-5 col-form-label" for="per_number"> Year</label>
+                                    <div class="col-md-7">
+                                        <input type="text" required class="form-control" id="year" readonly value="{{ date('Y') }}" name="year">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
@@ -115,17 +133,14 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="padd">
                                 <div class="row">
-                                    <label class="col-md-5 col-form-label" for="per_number"> Year</label>
+                                    <label class="col-md-5 col-form-label" for="per_number">P-Advanced-Salary :</label>
                                     <div class="col-md-7">
-                                        <input type="text" required class="form-control" readonly value="{{ date('Y') }}" name="year">
+                                        <input type="number" readonly  class="form-control" id="padvancedSalary" name="p_advanced_salary">
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-6">
@@ -236,10 +251,31 @@
             success: function (response) {
                 console.log(response);
                 $('#currentSalary').val(response.salary);
+                $('#designation').val(response.designation_name);
+            }
+        });
+    });
+
+    $(document).on('change','#month',function(){
+        var year = $('#year').val();
+        var month = $(this).val();
+
+        $.ajax({
+            url: "{{ route('get_padv_salary') }}",
+            method: 'GET',
+            dataType: 'JSON',
+            data: {
+                 month , year
+            },
+            success: function(data) {
+                console.log(data);
+
+                $('#padvancedSalary').val(data ?? 0);
             }
         });
     });
 </script>
+
 
 
 <script>
@@ -256,12 +292,14 @@
                  $('.bd-example-modal-lg').modal('show');
                  $('#employeeName').val(response.editadsalary.emp_id).prop('selected', true);
                  $('#employeeName').prop('disabled', true);
+                 $('#designation').val(response.editadsalary.employee.desig.name).prop('disabled', true);
                  $('#currentSalary').val(response.currentSalary).prop('disabled', true);
                  $('#remarks').val(response.editadsalary.remarks);
                  $('#month').val(response.editadsalary.month).prop('selected', true);
                  $('#month').prop('disabled', true);
                  $('#pay_mode').val(response.editadsalary.pay_mode).prop('selected', true);
                  $('#pay_mode').prop('disabled', true);
+                 $('#padd').css('display', 'none');
 
                  // Show or hide fields based on pay_mode
                  if (response.editadsalary.pay_mode === 'Cash') {
@@ -310,12 +348,14 @@
                  $('.bd-example-modal-lg').modal('show');
                  $('#employeeName').val(response.editadsalary.emp_id).prop('selected', true);
                  $('#employeeName').prop('disabled', true);
+                 $('#designation').val(response.editadsalary.employee.desig.name).prop('disabled', true);
                  $('#currentSalary').val(response.currentSalary).prop('disabled', true);
                  $('#remarks').val(response.editadsalary.remarks).prop('disabled', true);
                  $('#month').val(response.editadsalary.month).prop('disabled', true);
                  $('#month').prop('disabled', true);
                  $('#pay_mode').val(response.editadsalary.pay_mode).prop('selected', true);
                  $('#pay_mode').prop('disabled', true);
+                 $('#padd').css('display', 'none');
 
                  // Show or hide fields based on pay_mode
                  if (response.editadsalary.pay_mode === 'Cash') {

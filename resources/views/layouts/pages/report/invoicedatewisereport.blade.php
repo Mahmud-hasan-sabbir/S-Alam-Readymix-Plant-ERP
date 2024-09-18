@@ -65,30 +65,32 @@
    	  <table class="table border mb-0">
             <thead style="font-weight: 600;">
                <tr class="bg-light text-center">
-                <th>SL.No</th>
-                <th>Date</th>
-                <th>Site-Location</th>
-                <th>Grade</th>
-                <th>Qty</th>
-                <th>Qty-cft</th>
-                <th>Unit-Price</th>
-                <th>Sub-Total</th>
+                  <td>#</td>
+                  <td>Date</td>
+                  <td>Challan No.</td>
+                  <td>Truck No.</td>
+                  <td>Types</td>
+                  <td>Quantity</td>
+                  <td>Unit Rate</td>
+                  <td>Balance</td>
                </tr>
             </thead>
 
             <tbody class="text-center">
-                @foreach ($data as $item)
+                @foreach ($purchases as $purchase)
+                @foreach ($purchase->purchaseDetails as $detail)
                 <tr>
-                    <td scope="col">{{ $loop->iteration }}</td>
-                    <td scope="col">{{ $item->date }}</td>
-                    <td scope="col">{{ $item->Address}}</td>
-                    <td scope="col">{{ $item->grade}}</td>
-                    <td scope="col">{{ $item->qty_m3}}</td>
-                    <td scope="col">{{ $item->qty_cft}}</td>
-                    <td scope="col">{{ $item->unit_price_cft}}</td>
-                    <td scope="col">{{ $item->sub_total}}</td>
+                    <td>{{ $loop->parent->iteration }}</td>
+                    <td>{{ $purchase->order_date }}</td>
+                    <td>{{ $detail->challan_no }}</td>
+                    <td>{{ $detail->truck_no }}</td>
+                    <td>{{ $detail->material->name }}</td>
+                    <td>{{ $detail->Qty }}</td>
+                    <td>{{ $detail->unit_price }}</td>
+                    <td>{{ $detail->sub_total }}</td>
                 </tr>
                 @endforeach
+            @endforeach
 
               
             </tbody>
@@ -105,20 +107,20 @@
             
                     </td>
                     <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-                        <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;">Total Sales  </h6>
+            
                     </td>
                     <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-                        <h6 style="font-weight: bold;padding:0px;margin:0px" >{{ $totalsumqty }}</h6>
+            
                     </td>
                     <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-                        <h6 style="font-weight: bold;padding:0px;margin:0px" >{{ $totalsumqtycft }}</h6>
+                        <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;">Total Purchase Amount : </h6>
                     </td>
                     <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
                         <h6 style="font-weight: bold;padding:0px;margin:0px" id="" >
                         </h6>
                     </td>
                     <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
-                        <h6 style="font-weight: bold;padding:0px;margin:0px" >{{ $formattedTotalamount }}</h6>
+                        <h6 style="font-weight: bold;padding:0px;margin:0px" >{{ $totalpurchaseamount }}</h6>
                     </td>
                    
                   
@@ -166,7 +168,7 @@
                         </h6>
                     </td>
                     <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
-                        <h6 style="font-weight: bold;padding:0px;margin:0px" >{{ $totalpaidamount }}</h6>
+                        <h6 style="font-weight: bold;padding:0px;margin:0px" >{{ $totalpaymentamount }}</h6>
                     </td>
                    
                   
@@ -188,20 +190,11 @@
            </thead>
            <tbody>
             <tr class=" text-center">
-                <?php 
-                    // Remove commas and convert to float
-                    $numericTotalAmount = floatval(str_replace(',', '', $formattedTotalamount));
-                    $numericTotalPaidAmount = floatval(str_replace(',', '', $totalpaidamount));
-
-                    // Calculate balance
-                    $balance = $numericTotalAmount - $numericTotalPaidAmount;
-                ?>
-               <tr class="text-center">
-                <th>{{ number_format($numericTotalAmount, 2) }}</th> <!-- Format back with commas for display -->
-                <th>{{ number_format($numericTotalPaidAmount, 2) }}</th>
-                <th>{{ number_format($balance, 2) }}</th>
-                <th>{{ $balance > 0 ? 'Due' : 'Paid' }}</th>
-            </tr>
+                <?php $balance = $totalpurchaseamount - $totalpaymentamount ?>
+                <th >{{ $totalpurchaseamount }}</th>
+                <th >{{ $totalpaymentamount }}</th>
+                <th>{{ $balance }}</th>
+                <th >{{ $balance > 0 ? 'Due' : 'paid' }}</th>
              </tr>
            </tbody>
           

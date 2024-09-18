@@ -6,7 +6,7 @@
                 <!-- card header -->
                 <div class="card-header">
                     <h4 class="card-title">
-                     Total sales Report
+                     Sales Balance Sheet
                     </h4>
                     <div>
                         <button id="print" class="btn btn-sm btn-success"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Print</button>
@@ -66,17 +66,13 @@
                             <thead class="thead-dark" style="display: none">
                                 <tr>
                                     <th>SL.No</th>
+                                    <th>Date</th>
+                                    <th>Site-Location</th>
                                     <th>Grade</th>
-                                    <th>Black-Stone</th>
-                                    <th>Mixed-Builder</th>
-                                    <th>Dubai</th>
-                                    <th>MM10</th>
-                                    <th>Pcc-Cement</th>
-                                    <th>Opc-Cement</th>
-                                    <th>Beg-Cement</th>
-                                    <th>Sand</th>
-                                    <th>Admixer</th>
-                                    <th>Bricks</th>
+                                    <th>Qty</th>
+                                    <th>Qty-cft</th>
+                                    <th>Unit-Price</th>
+                                    <th>Sub-Total</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody">

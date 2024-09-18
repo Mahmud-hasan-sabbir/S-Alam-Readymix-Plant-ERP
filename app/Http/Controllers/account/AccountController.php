@@ -19,6 +19,7 @@ use App\Models\expenseHead;
 use App\Models\paymentForExpense;
 use App\Models\bankLoan;
 use App\Models\paidLoanAmount;
+use App\Models\refundingPayment;
 
 
 
@@ -95,7 +96,16 @@ class AccountController extends Controller
             ->sum('total_purchase_amount');
         $totalPaymentAmount = PaymentForSupplier::where('supplier_id', $request->id)
             ->sum('pay_amount');
-        $amountDue = $totalPurchaseAmount - $totalPaymentAmount;
+         $totaldiscountAmount = PaymentForSupplier::where('supplier_id', $request->id)
+            ->sum('discount_amount');
+
+        if($totaldiscountAmount > 0)
+        {
+            $amountDue = $totalPurchaseAmount - $totalPaymentAmount- $totaldiscountAmount;
+        }else{
+            $amountDue = $totalPurchaseAmount - $totalPaymentAmount;
+        }
+       
 
         return response()->json(['amount_due' => $amountDue]);
     }
@@ -118,6 +128,7 @@ class AccountController extends Controller
         $paymentForSupplier->check_num = $request->check_num;
         $paymentForSupplier->check_date = $request->check_date;
         $paymentForSupplier->pay_amount = $request->pay_amount;
+        $paymentForSupplier->discount_amount = $request->dis_amount;
         $paymentForSupplier->remarks = $request->remarks;
         $paymentForSupplier->is_approve = 0;
         $paymentForSupplier->user_id = Auth::user()->id;
@@ -136,7 +147,10 @@ class AccountController extends Controller
             ->sum('total_purchase_amount');
         $totalPaymentAmount = PaymentForSupplier::where('supplier_id', $supplierPaymentEdit->supplier_id)
             ->sum('pay_amount');
-        $amountDue = $totalPurchaseAmount - $totalPaymentAmount;
+            $totaldiscountAmount = PaymentForSupplier::where('supplier_id', $supplierPaymentEdit->supplier_id)
+            ->sum('discount_amount');
+
+        $amountDue = $totalPurchaseAmount - $totalPaymentAmount -$totaldiscountAmount;
 
         if($supplierPaymentEdit->pay_mode == 'Cash')
         {
@@ -163,6 +177,7 @@ class AccountController extends Controller
             'pay_date' => $request->pay_date,
             'pay_amount' => $request->pay_amount,
             'remarks' => $request->remarks,
+            'discount_amount' => $request->dis_amount,
         ];
 
         paymentForSupplier::where('id', $request->hidden_id)->update($updateData);
@@ -206,14 +221,35 @@ class AccountController extends Controller
     {
         $invoices = Invoice::where('cus_id', $request->id)->where('status', 1)->get();
 
+        // Sum up the total purchase amount from the invoices, removing any commas
         $totalPurchaseAmount = $invoices->sum(function ($invoice) {
             return floatval(str_replace(',', '', $invoice->total_amount));
         });
+
+        // Sum up the total payment amount made by the customer
         $totalPaymentAmount = CustomerPayment::where('customer_id', $request->id)->sum('pay_amount');
-        $amountDue = $totalPurchaseAmount - $totalPaymentAmount;
+
+        // Sum up the total refund amount given to the customer
+        $totalRefundAmount = refundingPayment::where('cus_id', $request->id)->sum('pay_amount');
+
+        // Calculate the net payment after considering refunds
+        $netPaymentAmount = $totalPaymentAmount - $totalRefundAmount;
+
+        // Calculate the amount due (purchase amount minus net payments)
+        $amountDue = $totalPurchaseAmount - $netPaymentAmount;
+
+        // Format the amount due for display
         $formattedAmountDue = number_format($amountDue, 2, '.', ',');
+
+        // If the amount due is negative, it means there is an advance payment
+        if ($amountDue < 0) {
+            $formattedAmountDue .= " (ADV)";
+        }
+
+        // Return the formatted amount due as a JSON response
         return response()->json(['amount_due' => $formattedAmountDue]);
     }
+
 
     public function storePaymentCustomer(Request $request)
     {
@@ -615,7 +651,7 @@ class AccountController extends Controller
 
     public function updateBankLoan(Request $request,$id)
     {
-       
+
         bankLoan::where('id',$id)->update([
             'bank_id' => $request->bank_id,
             'acc_no' => $request->acc_no,
@@ -673,7 +709,7 @@ class AccountController extends Controller
             'totalbankvalue' => $value,
             'accno' => $accno[0],
         ]);
-        
+
     }
 
 
@@ -744,7 +780,84 @@ class AccountController extends Controller
         $notification = ['messege' => 'paid loan cancaled successfully', 'alert-type' => 'success'];
         return redirect()->back()->with($notification);
     }
- 
+
+    public function refundingPayment()
+    {
+        $allSupplier = SallerInformation::where('category',2)->where('Status','Active')->get();
+        $allbankName = BankInfo::all();
+        $payment = refundingPayment::with('customerName')->latest()->get();
+        return view('layouts.pages.accounts.refunding.cusrefunding',compact('allSupplier','allbankName','payment'));
+    }
+
+    public function storeRefunding(Request $request)
+    {
+        $storerefun = new refundingPayment();
+        $storerefun->cus_id = $request->supplier_id;
+        $storerefun->pay_reason = $request->pay_reason;
+        $storerefun->pay_mode = $request->pay_mode;
+        $storerefun->pay_date = $request->pay_date;
+        $storerefun->bank_name = $request->bank_name;
+        $storerefun->check_num = $request->check_num;
+        $storerefun->check_date = $request->check_date;
+        $storerefun->pay_amount = $request->pay_amount;
+        $storerefun->remarks = $request->remarks;
+        $storerefun->is_approve = 0;
+        $storerefun->user_id =  Auth::user()->id;
+        $storerefun->save();
+
+        $notification = ['messege' => 'refunding save successfully', 'alert-type' => 'success'];
+        return redirect()->back()->with($notification);
+
+    }
+
+    public function refunPaymentEdit(Request $request)
+    {
+        $refunedit = refundingPayment::with('customerName')->where('id',$request->id)->first();
+        if($refunedit->pay_mode == 'Cash')
+        {
+            $value = transection::where('UpdateBy','Cash')->sum('Debit') - transection::where('UpdateBy','Cash')->sum('Credit');
+        }else{
+            $value = transection::where('StoreID',$refunedit->bank_name)->sum('Debit') - transection::where('StoreID',$refunedit->bank_name)->sum('Credit');
+        }
+
+     
+        
+        return response()->json([
+            'editrefun' => $refunedit,
+            'value' => $value,
+            
+        ]);
+    }
+
+    public function updateRefunData(Request $request)
+    {
+        
+        $updateData = [
+            'pay_date' => $request->pay_date,
+            'pay_amount' => $request->pay_amount,
+            'remarks' => $request->remarks,
+        ];
+
+        refundingPayment::where('id', $request->hidden_id)->update($updateData);
+
+
+        $notification = ['messege' => 'refunding Update Save successfully', 'alert-type' => 'success'];
+        return redirect()->back()->with($notification);
+    }
+
+    public function refundingApproveList()
+    {
+        $allapprovelist = refundingPayment::with('customerName')->where('is_approve',0)->latest()->get();
+        return view('layouts.pages.accounts.refunding.refundingapprovelist',compact('allapprovelist'));
+    }
+
+    public function refundingPaymentApprove($id)
+    {
+        refundingPayment::where('id', $id)->update(['is_approve' => 1]);
+        $notification = ['messege' => 'refunding Approve successfully', 'alert-type' => 'success'];
+        return redirect()->back()->with($notification);
+    }
+
 
 
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\SallerInformation;
 
 class transection extends Model
 {
@@ -27,7 +28,7 @@ class transection extends Model
 
     ];
 
-    public function saller()
+    public function sallername()
     {
         return $this->belongsTo(SallerInformation::class, 'Member_code', 'id');
     }

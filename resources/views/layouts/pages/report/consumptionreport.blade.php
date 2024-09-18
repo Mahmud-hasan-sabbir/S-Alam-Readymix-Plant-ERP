@@ -6,7 +6,7 @@
                 <!-- card header -->
                 <div class="card-header">
                     <h4 class="card-title">
-                     Total Purchase Report
+                    Consumption Report
                     </h4>
                     <div>
                         <button id="print" class="btn btn-sm btn-success"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Print</button>
@@ -34,8 +34,6 @@
                                 </div>
                             </div>
                         </div>
-
-
                         <div class="col-md-2">
                             <div class="row">
                                 <div class="col-md-8">
@@ -45,21 +43,11 @@
                         </div>
                     </div>
 
+                    <div class="row mt-2">
+
+                    </div>
                     <div class="row mt-4">
                         <table class="table" id="data-table">
-                            <thead class="thead-dark" style="display: none">
-                                <tr>
-                                    <th>SL.No</th>
-                                    <th>Date</th>
-                                    <th>Challan-No</th>
-                                    <th>Truck-No</th>
-                                    <th>Types</th>
-                                    <th>Qty</th>
-                                    <th>Unit-price</th>
-                                    <th>Balance</th>
-
-                                </tr>
-                            </thead>
                             <tbody id="tbody">
 
                             </tbody>
@@ -80,7 +68,7 @@
         var startDate = $('#start_date').val();
         var endDate = $('#end_date').val();
        $.ajax({
-           url: '{{ route('get_sup_totaldate_report') }}',
+           url: '{{ route('get_consumption_report') }}',
            method: 'GET',
            dataType: "html",
            data: { startDate,endDate},
@@ -105,8 +93,8 @@
     var endDate = $('#end_date').val();
 
     if (startDate && endDate) {
-        window.location.href = '{{ route('get_sup_totaldate_invoice') }}' + '?start_date=' + startDate + '&end_date=' + endDate;
-    }else {
+        window.location.href = '{{ route('get_totalconsumption_invoice') }}' + '?start_date=' + startDate + '&end_date=' + endDate;
+    } else {
         alert('Please select a date range and supplier before printing.');
     }
 });

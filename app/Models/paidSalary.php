@@ -18,6 +18,7 @@ class paidSalary extends Model
         'pay_mode',
         'bank_name',
         'acc_no',
+        'absence',
         'adv_salary',
         'status',
         'date',

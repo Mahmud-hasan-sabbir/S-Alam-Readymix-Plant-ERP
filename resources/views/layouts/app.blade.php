@@ -82,7 +82,7 @@
         ***********************************-->
         <div class="footer ">
             <div class="copyright">
-                <p>Copyright © Designed &amp; Developed by <a href="" target="_blank"><i><b>Cubix Soft It . {{ \Carbon\Carbon::now()->format('Y') }}</b></i></a> </p>
+                <p>Copyright © Designed &amp; Developed by <a href="https://goalcraftit.com" target="_blank"><i><b>GoalCraft It . {{ \Carbon\Carbon::now()->format('Y') }}</b></i></a> </p>
             </div>
         </div>
         <!--**********************************

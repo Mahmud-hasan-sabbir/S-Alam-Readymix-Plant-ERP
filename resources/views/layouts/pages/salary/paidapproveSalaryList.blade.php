@@ -36,18 +36,18 @@
                                         <td>{{ $item->date }}</td>
 
                                     <td>
-                                        <div style="width: 100%;margin-left:-50px">
+                                        <div style="width: 100%;margin-left:-19px">
                                             <form action="{{ route('paid_salary_approve',['id' => $item->id]) }}" method="post" >
                                                 <button class="btn btn-sm btn-success" style="padding: 3px">Approve</i></button>
                                                 @csrf
                                                 @method('PATCH')
                                             </form>
                                             <form action="{{ route('paid_salary_cancaled',['id' => $item->id]) }}" method="post" >
-                                                <button class="btn btn-sm btn-danger" style="padding: 3px;float: left;margin-left:58px;margin-top:-27px">Cancale</i></button>
+                                                <button class="btn btn-sm btn-danger" style="padding: 3px;float: left;margin-left:58px;margin-top:-27px">Delete</i></button>
                                                 @csrf
                                                 @method('PATCH')
                                             </form>
-                                            <button class="btn btn-sm btn-info view"  data-id="{{ $item->id }}" style="padding: 3px;width:45px;margin-left:117px;margin-top:-48px">view</i></button>
+                                            <button class="btn btn-sm btn-info view"  data-id="{{ $item->id }}" style="padding: 3px;width:45px;margin-left:107px;margin-top:-48px">view</i></button>
 
                                         </div>
                                     </td>
@@ -127,7 +127,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                         </div>
                         <div class="row mt-2" id="showbankrow">
                             <div class="col-md-6">
@@ -146,11 +146,11 @@
                                     </div>
                                 </div>
                             </div>
-                           
-                           
+
+
                         </div>
                         <div class="row mt-2">
-                            
+
                             <div class="col-md-12">
                                 <div class="row">
                                     <label class="col-md-5 col-form-label">Description :</label>
@@ -181,7 +181,7 @@
 <script>
    $(document).on('click', '.view', function() {
     var id = $(this).data('id');
-   
+
     $.ajax({
         url: "{{ route('paid_salary_view') }}",
         type: "GET",

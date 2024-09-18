@@ -144,7 +144,7 @@ class datasettingController extends Controller
             $saller->contact_person = $request->contact_person;
             $saller->mobile_no = $request->mobile_no;
             $saller->Email = $request->email;
-            $saller->Address = $request->site_location; // site location
+            $saller->Address = $request->site_location; 
 
             // Handle file uploads
             $uploadedImages = self::uploadImages($request);

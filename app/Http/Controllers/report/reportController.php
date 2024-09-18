@@ -21,6 +21,10 @@ use PDF;
 use App\Models\consumption;
 use App\Models\invoice\invoice;
 use App\Models\invoiceDetail;
+use App\Models\customerPayment;
+use App\Models\refundingPayment;
+use App\Models\Accounts\paymentForSupplier;
+use Carbon\Carbon;
 
 
 
@@ -119,33 +123,134 @@ class reportController extends Controller
 
         DB::statement('SET @CumulativeSum := ?', [$openBal->balance]);
 
-        if($request->headCode == 'Cash') {
-            $getmode = transection::where('UpdateBy',$request->headCode)
-                ->select('id', 'VDate', 'Description', 'Debit', 'Credit','UpdateBy', DB::raw('(@CumulativeSum := @CumulativeSum + Debit - Credit) as balance'))
-                ->whereDate('VDate', '>=', $request->startDate)
-                ->whereDate('VDate', '<=', $request->endDate)
-                ->get();
+        if ($request->headCode == 'Cash') {
+            // Initialize cumulative sum variable
+            DB::statement("SET @CumulativeSum := 0;");
+
+            // Run the main query
+            $getmode = DB::select(DB::raw("
+                SELECT t.id, t.VDate, t.Description, s.company_name, t.Debit, t.Credit, t.UpdateBy,
+                (@CumulativeSum := @CumulativeSum + t.Debit - t.Credit) as balance
+                FROM transections t
+                JOIN saller_information s ON t.Member_code = s.id
+                WHERE t.UpdateBy = :headCode
+                AND t.VDate >= :startDate
+                AND t.VDate <= :endDate
+            "), [
+                'headCode' => $request->headCode,
+                'startDate' => $request->startDate,
+                'endDate' => $request->endDate
+            ]);
         } else {
-            $getmode = transection::where('StoreID',$request->headCode)
-                ->select('id', 'VDate', 'Description', 'Debit', 'Credit','UpdateBy', DB::raw('(@CumulativeSum := @CumulativeSum + Debit - Credit) as balance'))
-                ->whereDate('VDate', '>=', $request->startDate)
-                ->whereDate('VDate', '<=', $request->endDate)
-                ->get();
+            // Initialize cumulative sum variable
+            DB::statement("SET @CumulativeSum := 0;");
+
+            // Run the main query
+            $getmode = DB::select(DB::raw("
+                SELECT t.id, t.VDate, t.Description, s.company_name, t.Debit, t.Credit, t.UpdateBy,
+                (@CumulativeSum := @CumulativeSum + t.Debit - t.Credit) as balance
+                FROM transections t
+                JOIN saller_information s ON t.Member_code = s.id
+                WHERE t.StoreID = :headCode
+                AND t.VDate >= :startDate
+                AND t.VDate <= :endDate
+            "), [
+                'headCode' => $request->headCode,
+                'startDate' => $request->startDate,
+                'endDate' => $request->endDate
+            ]);
         }
 
-        DB::statement('SET @CumulativeSum = 0');
-
+        // Calculate total debit, credit, and balance manually
+        $debitSum = 0;
+        $creditSum = 0;
         $totalBalance = 0;
 
         foreach ($getmode as $item) {
+            $debitSum += $item->Debit;
+            $creditSum += $item->Credit;
             $totalBalance = $item->balance;
         }
 
-
-        $debitSum = $getmode->where('Debit', '>', 0)->sum('Debit');
-        $creditSum = $getmode->where('Credit', '>', 0)->sum('Credit');
-
         return view('layouts.pages.report.load_mode_wise_report', compact('getmode', 'debitSum', 'creditSum', 'openBal', 'totalBalance'));
+    }
+
+    public function getModewiseInvoice(Request $request)
+    {
+        if($request->headCode == 'Cash')
+        {
+            $info = 'Cash';
+        }else{
+            $info = BankInfo::where('id', $request->headCode)->first();
+        }
+       
+       
+        if($request->headCode == 'Cash') {
+            $openBal = DB::table('transections')
+                ->selectRaw('IFNULL(SUM(IFNULL(Debit, 0)) - SUM(IFNULL(Credit, 0)), 0) as balance')
+                ->where('UpdateBy', $request->headCode)
+                ->whereDate('VDate', '<', $request->start_date)
+                ->first();
+        } else {
+            $openBal = DB::table('transections')
+                ->selectRaw('IFNULL(SUM(IFNULL(Debit, 0)) - SUM(IFNULL(Credit, 0)), 0) as balance')
+                ->where('StoreID', $request->headCode)
+                ->whereDate('VDate', '<', $request->start_date)
+                ->first();
+        }
+
+        DB::statement('SET @CumulativeSum := ?', [$openBal->balance]);
+
+        if ($request->headCode == 'Cash') {
+            // Initialize cumulative sum variable
+            DB::statement("SET @CumulativeSum := 0;");
+
+            // Run the main query
+            $getmode = DB::select(DB::raw("
+                SELECT t.id, t.VDate, t.Description, s.company_name, t.Debit, t.Credit, t.UpdateBy,
+                (@CumulativeSum := @CumulativeSum + t.Debit - t.Credit) as balance
+                FROM transections t
+                JOIN saller_information s ON t.Member_code = s.id
+                WHERE t.UpdateBy = :headCode
+                AND t.VDate >= :startDate
+                AND t.VDate <= :endDate
+            "), [
+                'headCode' => $request->headCode,
+                'startDate' => $request->start_date,
+                'endDate' => $request->end_date
+            ]);
+        } else {
+            // Initialize cumulative sum variable
+            DB::statement("SET @CumulativeSum := 0;");
+
+            // Run the main query
+            $getmode = DB::select(DB::raw("
+                SELECT t.id, t.VDate, t.Description, s.company_name, t.Debit, t.Credit, t.UpdateBy,
+                (@CumulativeSum := @CumulativeSum + t.Debit - t.Credit) as balance
+                FROM transections t
+                JOIN saller_information s ON t.Member_code = s.id
+                WHERE t.StoreID = :headCode
+                AND t.VDate >= :startDate
+                AND t.VDate <= :endDate
+            "), [
+                'headCode' => $request->headCode,
+                'startDate' => $request->start_date,
+                'endDate' => $request->end_date
+            ]);
+        }
+
+        // Calculate total debit, credit, and balance manually
+        $debitSum = 0;
+        $creditSum = 0;
+        $totalBalance = 0;
+
+        foreach ($getmode as $item) {
+            $debitSum += $item->Debit;
+            $creditSum += $item->Credit;
+            $totalBalance = $item->balance;
+        }
+
+        return view('layouts.pages.report.load_mode_wise_report_print', compact('getmode', 'debitSum', 'creditSum', 'openBal', 'totalBalance','info'));
     }
 
 
@@ -372,7 +477,7 @@ class reportController extends Controller
 
             return view('layouts.pages.report.deteSupReport', compact('purdetails', 'totalsub', 'netamount', 'discount','info'));
             } else {
-                                       
+
             return redirect()->back()->with('error', 'No data found for the selected supplier and date.');
             }
     }
@@ -387,11 +492,7 @@ class reportController extends Controller
     public function getSupTotaldateReport(Request $request)
     {
 
-        $query = Purchase::with('purchaseDetails.material', 'purchaseDetails.unit');
-
-        if ($request->has('supplierId') && !empty($request->supplierId)) {
-            $query->where('supplier_id', $request->supplierId);
-        }
+        $query = Purchase::with('purchaseDetails.material');
 
         if ($request->has('startDate') && !empty($request->startDate) && $request->has('endDate') && !empty($request->endDate)) {
             $query->whereBetween('order_date', [$request->startDate, $request->endDate]);
@@ -401,25 +502,21 @@ class reportController extends Controller
 
         $total = $purchases->flatMap->purchaseDetails->sum('sub_total');
 
-        // $total = $purchases->flatMap->purchaseDetails->sum('sub_total');
 
         return view('layouts.pages.report.loadtoanddatereport', compact('purchases', 'total'));
     }
 
     public function getSupTotaldateInvoice(Request $request)
     {
-        $info = SallerInformation::find($request->supplier_id);
-        $query = Purchase::with('purchaseDetails.material', 'purchaseDetails.unit');
-        if ($request->filled('supplier_id')) {
-            $query->where('supplier_id', $request->supplier_id);
-        }
+        $query = Purchase::with('purchaseDetails.material');
         if ($request->filled('start_date') && $request->filled('end_date')) {
             $query->whereBetween('order_date', [$request->start_date, $request->end_date]);
         }
         $purdetails = $query->get();
-        $details = $purdetails->flatMap->purchaseDetails;
-        $total = $details->sum('sub_total');
-        return view('layouts.pages.report.loadtoanddatereportinvoice', compact('details', 'total','info'));
+        $total = $purdetails->flatMap->purchaseDetails->sum('sub_total');
+        $formdate = Carbon::parse($request->start_date)->format('m/d/Y');
+        $enddate = Carbon::parse($request->end_date)->format('m/d/Y');
+        return view('layouts.pages.report.loadtoanddatereportinvoice', compact('purdetails','total','formdate','enddate'));
     }
 
 
@@ -454,7 +551,7 @@ class reportController extends Controller
             return redirect()->back()->with('error', 'No data found for the selected supplier and date.');
         }
 
-       
+
         return view('layouts.pages.report.detecusReport', compact('getdetcusReport','info'));
 
     }
@@ -471,82 +568,333 @@ class reportController extends Controller
     public function getcusTotaldateReport(Request $request)
     {
 
+        $data = DB::table('invoices')
+            ->join('invoice_details', 'invoices.id', '=', 'invoice_details.inv_id')
+            ->join('grades', 'grades.id', '=', 'invoice_details.grade_id')
+            ->join('saller_information', 'invoices.cus_id', '=', 'saller_information.id')
+            ->select('invoices.date', 'invoice_details.qty_m3','invoice_details.qty_cft','invoice_details.unit_price_cft','invoice_details.sub_total', 'saller_information.Address','grades.name as grade')
+            ->whereDate('invoices.date', '>=', $request->startDate)
+            ->whereDate('invoices.date', '<=', $request->endDate)
+            ->where('cus_id', $request->customerId)
+            ->get();
 
 
-        $query = consumption::with('grade');
+            $payments = DB::table('customer_payments')
+            ->where('customer_id', $request->customerId)
+            ->whereDate('pay_date', '>=', $request->startDate)
+            ->whereDate('pay_date', '<=', $request->endDate)
+            ->get();
 
-        if ($request->has('customerId') && !empty($request->customerId)) {
-            $query->where('customer_id', $request->customerId);
-        }
+            $totalpaidamount = $payments->sum('pay_amount');
 
-        if ($request->has('startDate') && !empty($request->startDate) && $request->has('endDate') && !empty($request->endDate)) {
-            $query->whereBetween('date', [$request->startDate, $request->endDate]);
-        }
 
-        $getcusReport = $query->get();
 
-        return view('layouts.pages.report.loadtoanddatereportcus', compact('getcusReport'));
+
+            $totalsum = $data->sum(function($item) {
+                return floatval(str_replace(',', '', $item->sub_total));
+            });
+
+            $formattedTotalamount = number_format($totalsum, 2, '.', ',');
+
+            $totalsumqty = $data->sum(function($item) {
+                return floatval(str_replace(',', '', $item->qty_m3));
+            });
+
+            $totalsumqty = number_format($totalsumqty, 2, '.', ',');
+
+            $totalsumqtycft = $data->sum(function($item) {
+                return floatval(str_replace(',', '', $item->qty_cft));
+            });
+
+            $totalsumqtycft = number_format($totalsumqtycft, 2, '.', ',');
+
+
+
+        return view('layouts.pages.report.loadtoanddatereportcus', compact('data','formattedTotalamount','totalsumqty','totalsumqtycft','payments','totalpaidamount'));
     }
 
     public function getCusTotaldateInvoice(Request $request)
     {
+
+        $startDate = Carbon::parse($request->start_date)->format('Y-m-d');
+        $endDate = Carbon::parse($request->end_date)->format('Y-m-d');
         $info = SallerInformation::find($request->customerId);
-        $query = consumption::with('grade','customer');
+        $data = DB::table('invoices')
+        ->join('invoice_details', 'invoices.id', '=', 'invoice_details.inv_id')
+        ->join('grades', 'grades.id', '=', 'invoice_details.grade_id')
+        ->join('saller_information', 'invoices.cus_id', '=', 'saller_information.id')
+        ->select(
+            'invoices.date',
+            'invoice_details.qty_m3',
+            'invoice_details.qty_cft',
+            'invoice_details.unit_price_cft',
+            'invoice_details.sub_total',
+            'saller_information.Address',
+            'grades.name as grade'
+        )
+        ->where('invoices.cus_id', $request->customerId)
+        ->whereDate('invoices.date', '>=', $startDate)
+        ->whereDate('invoices.date', '<=', $endDate)
+        ->get();
 
-        if ($request->has('customerId') && !empty($request->customerId)) {
-            $query->where('customer_id', $request->customerId);
-        }
 
-        if ($request->has('startDate') && !empty($request->startDate) && $request->has('endDate') && !empty($request->endDate)) {
-            $query->whereBetween('date', [$request->startDate, $request->endDate]);
-        }
 
-        $getcusReport = $query->get();
+            $payments = DB::table('customer_payments')
+            ->where('customer_id', $request->customerId)
+            ->whereDate('pay_date', '>=', $startDate)
+            ->whereDate('pay_date', '<=', $endDate)
+            ->get();
 
-       
-        return view('layouts.pages.report.loadtoanddatereportinvoicecus', compact('getcusReport', 'info'));
+            $totalpaidamount = $payments->sum('pay_amount');
+
+
+
+
+            $totalsum = $data->sum(function($item) {
+                return floatval(str_replace(',', '', $item->sub_total));
+            });
+
+            $formattedTotalamount = number_format($totalsum, 2, '.', ',');
+
+            $totalsumqty = $data->sum(function($item) {
+                return floatval(str_replace(',', '', $item->qty_m3));
+            });
+
+            $totalsumqty = number_format($totalsumqty, 2, '.', ',');
+
+            $totalsumqtycft = $data->sum(function($item) {
+                return floatval(str_replace(',', '', $item->qty_cft));
+            });
+
+            $totalsumqtycft = number_format($totalsumqtycft, 2, '.', ',');
+
+
+        return view('layouts.pages.report.loadtoanddatereportinvoicecus', compact('data','formattedTotalamount','totalsumqty','totalsumqtycft','payments','totalpaidamount', 'info'));
     }
 
 
     public function customerWiseSaleReport()
     {
-        $allSallerName = SallerInformation::where('category',2)->get();
-        return view('layouts.pages.report.customerwisesalereport',compact('allSallerName'));
+        return view('layouts.pages.report.customerwisesalereport');
     }
 
     public function getcuswisesalereport(Request $request)
     {
-        $getcuswisesalereport = invoice::with('invdetail')->where('date',$request->date)->where('cus_id',$request->customerId)->get();
-        $pluck = $getcuswisesalereport->pluck('id');
-        $detail = invoiceDetail::with('grade','invoice')->where('inv_id',$pluck)->get();
-        $totalAmount = $detail->reduce(function ($carry, $item) {
-            $subTotal = floatval(str_replace(',', '', $item->sub_total));
-            return $carry + $subTotal;
-        }, 0);
 
-        $formattedTotalamount = number_format($totalAmount, 2, '.', ',');
-        return view('layouts.pages.report.loadcustomerwisesalereport',compact('detail','formattedTotalamount'));
+        $data = DB::table('invoices')
+            ->join('invoice_details', 'invoices.id', '=', 'invoice_details.inv_id')
+            ->join('grades', 'grades.id', '=', 'invoice_details.grade_id')
+            ->join('saller_information', 'invoices.cus_id', '=', 'saller_information.id')
+            ->select('invoices.date', 'invoice_details.qty_m3','invoice_details.qty_cft','invoice_details.unit_price_cft','invoice_details.sub_total', 'saller_information.company_name','grades.name as grade')
+            ->whereDate('invoices.date', '>=', $request->fdate)
+            ->whereDate('invoices.date', '<=', $request->edate)
+            ->get();
+
+            $totalsum = $data->sum(function($item) {
+                return floatval(str_replace(',', '', $item->sub_total));
+            });
+
+            $formattedTotalamount = number_format($totalsum, 2, '.', ',');
+
+
+
+
+        return view('layouts.pages.report.loadcustomerwisesalereport',compact('data','formattedTotalamount'));
     }
 
     public function generateSaleInvoice(Request $request)
     {
-        $customer = SallerInformation::find($request->customerId);
-        $getcuswisesalereport = invoice::with('invdetail')->where('date',$request->date)->where('cus_id',$request->customerId)->get();
-        $pluck = $getcuswisesalereport->pluck('id');
-        $detail = invoiceDetail::with('grade','invoice')->where('inv_id',$pluck)->get();
-        $totalAmount = $detail->reduce(function ($carry, $item) {
-            $subTotal = floatval(str_replace(',', '', $item->sub_total));
-            return $carry + $subTotal;
-        }, 0);
+        $data = DB::table('invoices')
+            ->join('invoice_details', 'invoices.id', '=', 'invoice_details.inv_id')
+            ->join('grades', 'grades.id', '=', 'invoice_details.grade_id')
+            ->join('saller_information', 'invoices.cus_id', '=', 'saller_information.id')
+            ->select('invoices.date', 'invoice_details.qty_m3','invoice_details.qty_cft','invoice_details.unit_price_cft','invoice_details.sub_total', 'saller_information.company_name','grades.name as grade')
+            ->whereDate('invoices.date', '>=', $request->fdate)
+            ->whereDate('invoices.date', '<=', $request->edate)
+            ->get();
 
-        $formattedTotalamount = number_format($totalAmount, 2, '.', ',');
+            $totalsum = $data->sum(function($item) {
+                return floatval(str_replace(',', '', $item->sub_total));
+            });
 
-        return view('layouts.pages.report.genaretecussalereport', compact('detail','formattedTotalamount','customer'));
+            $formattedTotalamount = number_format($totalsum, 2, '.', ',');
+
+            $formdate = Carbon::parse($request->fdate)->format('m/d/Y');
+            $enddate = Carbon::parse($request->edate)->format('m/d/Y');
+
+        return view('layouts.pages.report.genaretecussalereport', compact('data','formattedTotalamount','formdate','enddate'));
 
     }
 
 
+    public function refundingReport()
+    {
+        $allSallerName = SallerInformation::where('category',2)->get();
+        return view('layouts.pages.report.refundingreport',compact('allSallerName'));
+    }
 
+    public function getRefundingReport(Request $request)
+    {
+
+        $invoices = Invoice::where('cus_id', $request->id)->where('status', 1)->get();
+        $totalPurchaseAmount = $invoices->sum(function ($invoice) {
+            return floatval(str_replace(',', '', $invoice->total_amount));
+        });
+        $totalPaymentAmount = CustomerPayment::where('customer_id', $request->id)->sum('pay_amount');
+        $totalRefundAmount = refundingPayment::where('cus_id', $request->id)->sum('pay_amount');
+        $netPaymentAmount = $totalPaymentAmount - $totalRefundAmount;
+        $amountDue = $totalPurchaseAmount - $netPaymentAmount;
+        $advanceDue = $netPaymentAmount - $totalPurchaseAmount;
+        $formattedAmountDue = number_format($amountDue, 2, '.', ',');
+        $formattedAdvanceDue = number_format($advanceDue, 2, '.', ',');
+
+        if ($amountDue < 0) {
+            $formattedAmountDue .= " (ADV)";
+        }
+
+        if ($advanceDue > 0) {
+            $formattedAdvanceDue .= " (ADV)";
+        } else {
+            $formattedAdvanceDue = number_format(0, 2, '.', ',');
+        }
+        $refundPaid = ($advanceDue > 0 && $advanceDue == $totalRefundAmount) ? number_format(0, 2, '.', ',') : number_format($totalRefundAmount, 2, '.', ',');
+        return view('layouts.pages.report.getrefundingreport', compact('totalPurchaseAmount', 'formattedAmountDue', 'totalRefundAmount', 'formattedAdvanceDue', 'refundPaid'));
+    }
+
+
+    public function dateWiseSupReport()
+    {
+        $allSallerName = SallerInformation::where('category',1)->get();
+        return view('layouts.pages.report.datewisesupreport',compact('allSallerName'));
+    }
+
+    public function getSupTotalpurReport(Request $request)
+    {
+        // Fetch purchases along with details and materials
+        $query = Purchase::with('purchaseDetails.material');
+
+        // Filter by supplier ID if provided
+        if ($request->has('supplierId') && !empty($request->supplierId)) {
+            $query->where('supplier_id', $request->supplierId);
+        }
+
+        // Filter by date range if provided
+        if ($request->has('startDate') && !empty($request->startDate) && $request->has('endDate') && !empty($request->endDate)) {
+            $query->whereBetween('order_date', [$request->startDate, $request->endDate]);
+        }
+
+        $purchases = $query->get();
+
+        $totalpurchaseamount = 0;
+
+        foreach ($purchases as $purchase) {
+
+            $totalpurchaseamount += $purchase->purchaseDetails->sum('sub_total');
+        }
+
+        $payments = paymentForSupplier::where('supplier_id', $request->supplierId)
+                    ->whereBetween('pay_date', [$request->startDate, $request->endDate])
+                    ->select('pay_date', 'pay_mode', 'pay_amount')
+                    ->get();
+
+        $totalpaymentamount = $payments->sum('pay_amount');
+
+
+        // Pass both purchases and grouped payments to the view
+        return view('layouts.pages.report.loaddatewisereport', compact('purchases', 'payments','totalpurchaseamount','totalpaymentamount'));
+    }
+
+    public function getSupTotalInvoice(Request $request)
+    {
+
+        $info = SallerInformation::find($request->supplier_id);
+        $query = Purchase::with('purchaseDetails.material');
+
+        if ($request->has('supplierId') && !empty($request->supplierId)) {
+            $query->where('supplier_id', $request->supplierId);
+        }
+
+        if ($request->has('startDate') && !empty($request->startDate) && $request->has('endDate') && !empty($request->endDate)) {
+            $query->whereBetween('order_date', [$request->startDate, $request->endDate]);
+        }
+
+        $purchases = $query->get();
+
+        $totalpurchaseamount = 0;
+
+        foreach ($purchases as $purchase) {
+
+            $totalpurchaseamount += $purchase->purchaseDetails->sum('sub_total');
+        }
+
+        $payments = paymentForSupplier::where('supplier_id', $request->supplier_id)
+                    ->whereBetween('pay_date', [$request->start_date, $request->end_date])
+                    ->select('pay_date', 'pay_mode', 'pay_amount')
+                    ->get();
+
+
+
+
+
+        $totalpaymentamount = $payments->sum('pay_amount');
+
+
+        // Pass both purchases and grouped payments to the view
+        return view('layouts.pages.report.invoicedatewisereport', compact('purchases', 'payments','totalpurchaseamount','totalpaymentamount','info'));
+    }
+
+
+    public function consumptionreport()
+    {
+        return view('layouts.pages.report.consumptionreport');
+    }
+
+    public function getConsumptionReport(Request $request)
+    {
+        $consumptions = consumption::with('grade','customer')
+            ->whereDate('date', '>=', $request->startDate)
+            ->whereDate('date', '<=', $request->endDate)
+            ->get();
+
+            $totalqty = $consumptions->sum('quantity');
+            $totalblackstone = $consumptions->sum('black_stone');
+            $mixed_builder = $consumptions->sum('mixed_builder');
+            $dubai = $consumptions->sum('dubai');
+            $mm10 = $consumptions->sum('mm10');
+            $pcc_cement = $consumptions->sum('pcc_cement');
+            $opc_cement = $consumptions->sum('opc_cement');
+            $beg_cement = $consumptions->sum('beg_cement');
+            $sand = $consumptions->sum('sand');
+            $admixer = $consumptions->sum('admixer');
+            $bricks = $consumptions->sum('bricks');
+
+        return view('layouts.pages.report.loadconsumptionreport', compact('consumptions','totalqty','totalblackstone','mixed_builder','dubai','mm10','pcc_cement','opc_cement','beg_cement','sand','admixer','bricks'));
+    }
+
+    public function getTotalconsumptionInvoice(Request $request)
+    {
+        $consumptions = consumption::with('grade','customer')
+            ->whereDate('date', '>=', $request->start_date)
+            ->whereDate('date', '<=', $request->end_date)
+            ->get();
+
+            $totalqty = $consumptions->sum('quantity');
+            $totalblackstone = $consumptions->sum('black_stone');
+            $mixed_builder = $consumptions->sum('mixed_builder');
+            $dubai = $consumptions->sum('dubai');
+            $mm10 = $consumptions->sum('mm10');
+            $pcc_cement = $consumptions->sum('pcc_cement');
+            $opc_cement = $consumptions->sum('opc_cement');
+            $beg_cement = $consumptions->sum('beg_cement');
+            $sand = $consumptions->sum('sand');
+            $admixer = $consumptions->sum('admixer');
+            $bricks = $consumptions->sum('bricks');
+
+            $startdate = $request->start_date;
+            $enddate = $request->end_date;
+
+        return view('layouts.pages.report.consumptionprint', compact('consumptions','totalqty','totalblackstone','mixed_builder','dubai','mm10','pcc_cement','opc_cement','beg_cement','sand','admixer','bricks','startdate','enddate'));
+    }
 
 
 

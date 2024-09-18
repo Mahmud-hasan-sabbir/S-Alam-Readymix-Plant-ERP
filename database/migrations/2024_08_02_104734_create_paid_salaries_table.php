@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('pay_mode')->nullable();
             $table->integer('bank_name')->nullable();
             $table->string('acc_no')->nullable();
+            $table->string('absence')->nullable();
             $table->integer('adv_salary')->nullable();
             $table->tinyInteger('status')->default('0');
             $table->date('date')->nullable();

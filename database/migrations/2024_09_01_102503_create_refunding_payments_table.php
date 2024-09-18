@@ -13,17 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('payment_for_suppliers', function (Blueprint $table) {
+        Schema::create('refunding_payments', function (Blueprint $table) {
             $table->id();
-            $table->integer('supplier_id')->nullable();
-            $table->string('po_no')->nullable();
+            $table->integer('cus_id')->nullable();
             $table->string('pay_reason')->nullable();
             $table->string('pay_mode')->nullable();
             $table->date('pay_date')->nullable();
             $table->string('bank_name')->nullable();
             $table->string('check_num')->nullable();
             $table->date('check_date')->nullable();
-            $table->string('discount_amount')->nullable();
             $table->integer('pay_amount')->nullable();
             $table->text('remarks')->nullable();
             $table->integer('is_approve')->default(0);
@@ -40,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payment_for_suppliers');
+        Schema::dropIfExists('refunding_payments');
     }
 };

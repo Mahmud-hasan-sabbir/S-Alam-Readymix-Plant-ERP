@@ -20,6 +20,7 @@ class paymentForSupplier extends Model
         'bank_name',
         'check_num',
         'check_date',
+        'discount_amount',
         'pay_amount',
         'remarks',
         'is_approve',
