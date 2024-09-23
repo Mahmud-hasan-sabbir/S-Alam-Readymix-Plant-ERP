@@ -192,7 +192,7 @@
                                 <div class="form-group row">
                                     <label for="" class="col-md-5"> Discount Amount</label>
                                     <div class="col-md-7">
-                                        <input type="number" name="dis_amount" required id="payamount" class="form-control" placeholder="Enter discount Amount">
+                                        <input type="number" name="dis_amount"  id="payamount" class="form-control" placeholder="Enter discount Amount">
                                     </div>
                                 </div>
                             </div>

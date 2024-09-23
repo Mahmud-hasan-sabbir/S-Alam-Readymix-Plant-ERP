@@ -39,7 +39,7 @@ class reportController extends Controller
     public function getSupplierWiseReport(Request $request)
     {
 
-        $getSupplierReport = transection::with('saller')
+        $getSupplierReport = transection::with('sallername')
         ->where('Member_code',$request->supplierId)
         ->whereDate('VDate', '>=', $request->startDate)
         ->whereDate('VDate', '<=', $request->endDate)
@@ -58,7 +58,7 @@ class reportController extends Controller
 
     public function getCustomerWiseReport(Request $request)
     {
-        $getcustomerReport = transection::with('saller')
+        $getcustomerReport = transection::with('sallername')
         ->where('Member_code', $request->customerId)
         ->whereDate('VDate', '>=', $request->startDate)
         ->whereDate('VDate', '<=', $request->endDate)
@@ -183,8 +183,8 @@ class reportController extends Controller
         }else{
             $info = BankInfo::where('id', $request->headCode)->first();
         }
-       
-       
+
+
         if($request->headCode == 'Cash') {
             $openBal = DB::table('transections')
                 ->selectRaw('IFNULL(SUM(IFNULL(Debit, 0)) - SUM(IFNULL(Credit, 0)), 0) as balance')
@@ -305,7 +305,7 @@ class reportController extends Controller
     {
 
         $supplierIds = SallerInformation::where('Category', 1)->pluck('id');
-        $totalSupplierReport = transection::with('saller')
+        $totalSupplierReport = transection::with('sallername')
         ->whereIn('Member_code', $supplierIds)
         ->select('Member_code', DB::raw('SUM(Debit) as total_debit'), DB::raw('SUM(Credit) as total_credit'))
         ->groupBy('Member_code')
@@ -318,7 +318,7 @@ class reportController extends Controller
     public function allCustomerReport()
     {
         $customerIds = SallerInformation::where('Category', 2)->pluck('id');
-        $transactions = transection::with('saller')
+        $transactions = transection::with('sallername')
             ->whereIn('Member_code', $customerIds)
             ->get();
         $totalcustomerReport = $transactions->groupBy('Member_code')->map(function ($transactions) {
@@ -333,7 +333,7 @@ class reportController extends Controller
                 'Member_code' => $transactions->first()->Member_code,
                 'total_debit' => $totalDebit,
                 'total_credit' => $totalCredit,
-                'saller' => $transactions->first()->saller,
+                'saller' => $transactions->first()->sallername,
             ];
         });
 
@@ -501,9 +501,10 @@ class reportController extends Controller
         $purchases = $query->get();
 
         $total = $purchases->flatMap->purchaseDetails->sum('sub_total');
+        $totaldiscount =  $purchases->sum('discount');
 
 
-        return view('layouts.pages.report.loadtoanddatereport', compact('purchases', 'total'));
+        return view('layouts.pages.report.loadtoanddatereport', compact('purchases', 'total','totaldiscount'));
     }
 
     public function getSupTotaldateInvoice(Request $request)
@@ -792,6 +793,8 @@ class reportController extends Controller
             $totalpurchaseamount += $purchase->purchaseDetails->sum('sub_total');
         }
 
+        $totaldiscount = $purchases->sum('discount');
+
         $payments = paymentForSupplier::where('supplier_id', $request->supplierId)
                     ->whereBetween('pay_date', [$request->startDate, $request->endDate])
                     ->select('pay_date', 'pay_mode', 'pay_amount')
@@ -801,7 +804,7 @@ class reportController extends Controller
 
 
         // Pass both purchases and grouped payments to the view
-        return view('layouts.pages.report.loaddatewisereport', compact('purchases', 'payments','totalpurchaseamount','totalpaymentamount'));
+        return view('layouts.pages.report.loaddatewisereport', compact('purchases', 'payments','totalpurchaseamount','totalpaymentamount','totaldiscount'));
     }
 
     public function getSupTotalInvoice(Request $request)

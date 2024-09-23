@@ -40,7 +40,7 @@
                                     @endphp
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $report->saller->company_name }}</td>
+                                        <td>{{ $report->sallername->company_name }}</td>
                                         <td>{{ number_format($report->total_debit, 2, '.', ',') }}</td>
                                         <td>{{ number_format($report->total_credit, 2, '.', ',') }}</td>
                                         <td>

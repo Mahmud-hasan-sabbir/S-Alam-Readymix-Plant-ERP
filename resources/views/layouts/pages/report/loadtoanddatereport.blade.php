@@ -49,11 +49,77 @@
 
 
     </tr>
+    <tr class="addr" >
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
+
+        </td>
+
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+            <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;">Total Discount : </h6>
+        </td>
+        <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
+            <h6 style="font-weight: bold;padding:0px;margin:0px" id="" >
+            </h6>
+        </td>
+        <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
+            <h6 style="font-weight: bold;padding:0px;margin:0px" id="totaldiscout" >
+            </h6>
+        </td>
+
+
+    </tr>
+    <tr class="addr" >
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
+
+        </td>
+
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+            <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;">Payble Amount : </h6>
+        </td>
+        <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
+            <h6 style="font-weight: bold;padding:0px;margin:0px" id="" >
+            </h6>
+        </td>
+        <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
+            <h6 style="font-weight: bold;padding:0px;margin:0px" id="payableamount" >
+            </h6>
+        </td>
+
+
+    </tr>
 </t-footer>
 
 <script>
     var totalsub = {{ $total }};
+    var totaldiscount = {{ $totaldiscount }};
+    var payableamount = totalsub - totaldiscount;
     document.getElementById('debitSumDisplay').innerHTML = Number(totalsub).toFixed(2);
+    document.getElementById('totaldiscout').innerHTML = Number(totaldiscount).toFixed(2);
+    document.getElementById('payableamount').innerHTML = Number(payableamount).toFixed(2);
 </script>
 
 

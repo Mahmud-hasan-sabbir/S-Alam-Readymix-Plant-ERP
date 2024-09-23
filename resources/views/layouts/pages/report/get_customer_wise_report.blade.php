@@ -24,7 +24,7 @@
 @foreach ($getcustomerReport as $item)
 <tr>
     <td>{{ $loop->iteration }}</td>
-    <td>{{ $item->saller->company_name }}</td>
+    <td>{{ $item->sallername->company_name }}</td>
     <td>{{ $item->VDate }}</td>
     <td>{{ $item->Description }}</td>
     <td>{{ $item->Debit }}</td>

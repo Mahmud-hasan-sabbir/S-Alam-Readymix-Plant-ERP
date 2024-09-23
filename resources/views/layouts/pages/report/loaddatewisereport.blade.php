@@ -24,7 +24,7 @@
         <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
 
         </td>
-       
+
         <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
 
         </td>
@@ -48,8 +48,70 @@
             <h6 style="font-weight: bold;padding:0px;margin:0px" id="totalpurchaseamount" >
             </h6>
         </td>
-       
-      
+
+
+    </tr>
+    <tr class="addr" >
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
+
+        </td>
+
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+            <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;">Total Discount Amount : </h6>
+        </td>
+        <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
+            <h6 style="font-weight: bold;padding:0px;margin:0px" id="" >
+            </h6>
+        </td>
+        <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
+            <h6 style="font-weight: bold;padding:0px;margin:0px" id="totaldiscount" >
+            </h6>
+        </td>
+
+
+    </tr>
+    <tr class="addr" >
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
+
+        </td>
+
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
+        </td>
+        <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+            <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;">Net Amount : </h6>
+        </td>
+        <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
+            <h6 style="font-weight: bold;padding:0px;margin:0px" id="" >
+            </h6>
+        </td>
+        <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
+            <h6 style="font-weight: bold;padding:0px;margin:0px" id="netamount" >
+            </h6>
+        </td>
+
+
     </tr>
 </t-footer>
 
@@ -122,7 +184,7 @@
     <td>{{ $item->pay_amount }}</td>
     <td>{{ $item->pay_mode }}</td>
     <td></td>
-    
+
 </tr>
 @endforeach
 
@@ -242,12 +304,16 @@
 
 <script>
     var totalpurchaseamount = {{ $totalpurchaseamount }};
+    var totaldiscount = {{ $totaldiscount }};
+    var netamount = totalpurchaseamount - totaldiscount;
     var totalpaymentamount = {{ $totalpaymentamount }};
-    var balance = totalpurchaseamount - totalpaymentamount;
+    var balance = netamount - totalpaymentamount;
     var paymentstatus = balance > 0 ? 'Due' : 'Paid';
     document.getElementById('totalpurchaseamount').innerHTML = totalpurchaseamount;
+    document.getElementById('totaldiscount').innerHTML = totaldiscount;
+    document.getElementById('netamount').innerHTML = netamount;
     document.getElementById('totalpayment').innerHTML = totalpaymentamount;
-    document.getElementById('totalbil').innerHTML = totalpurchaseamount;
+    document.getElementById('totalbil').innerHTML = netamount;
     document.getElementById('paidamount').innerHTML = totalpaymentamount;
     document.getElementById('balance').innerHTML = balance;
     document.getElementById('paymentstatus').innerHTML = paymentstatus;

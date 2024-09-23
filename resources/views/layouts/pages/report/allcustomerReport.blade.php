@@ -9,7 +9,7 @@
                     Total customer Report
                     </h4>
                     <div>
-                        
+
                         <a href="" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
                     </div>
 
@@ -41,7 +41,7 @@
                                     @endphp
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $report['saller']->company_name }}</td> 
+                                        <td>{{ $report['saller']->company_name }}</td>
                                         <td>{{ number_format($totalSales, 2, '.', ',') }}</td>
                                         <td>{{ number_format($receivedAmount, 2, '.', ',') }}</td>
                                         <td>
