@@ -107,6 +107,7 @@ class reportController extends Controller
 
     public function getModeWiseReport(Request $request)
     {
+
         if($request->headCode == 'Cash') {
             $openBal = DB::table('transections')
                 ->selectRaw('IFNULL(SUM(IFNULL(Debit, 0)) - SUM(IFNULL(Credit, 0)), 0) as balance')
@@ -121,44 +122,68 @@ class reportController extends Controller
                 ->first();
         }
 
+
         DB::statement('SET @CumulativeSum := ?', [$openBal->balance]);
 
-        if ($request->headCode == 'Cash') {
-            // Initialize cumulative sum variable
-            DB::statement("SET @CumulativeSum := 0;");
 
-            // Run the main query
+        if ($request->headCode == 'Cash') {
+            // Run the main query for 'Cash'
             $getmode = DB::select(DB::raw("
-                SELECT t.id, t.VDate, t.Description, s.company_name, t.Debit, t.Credit, t.UpdateBy,
-                (@CumulativeSum := @CumulativeSum + t.Debit - t.Credit) as balance
-                FROM transections t
-                JOIN saller_information s ON t.Member_code = s.id
-                WHERE t.UpdateBy = :headCode
-                AND t.VDate >= :startDate
-                AND t.VDate <= :endDate
+                SELECT
+                    t.id,
+                    t.VDate,
+                    t.Description,
+                    COALESCE(s.company_name, eh.name) AS name,
+                    t.Debit,
+                    t.Credit,
+                    t.UpdateBy,
+                    (@CumulativeSum := @CumulativeSum + t.Debit - t.Credit) as balance
+                FROM
+                    transections t
+                LEFT JOIN
+                    saller_information s
+                    ON t.Member_code = s.id AND t.Member_code != 0
+                LEFT JOIN
+                    expense_heads eh
+                    ON t.Member_code = 0 AND eh.id = t.HeadCode
+                WHERE
+                    t.UpdateBy = 'Cash'
+                    AND t.VDate >= :startDate
+                    AND t.VDate <= :endDate
             "), [
-                'headCode' => $request->headCode,
                 'startDate' => $request->startDate,
                 'endDate' => $request->endDate
             ]);
         } else {
-            // Initialize cumulative sum variable
-            DB::statement("SET @CumulativeSum := 0;");
 
-            // Run the main query
-            $getmode = DB::select(DB::raw("
-                SELECT t.id, t.VDate, t.Description, s.company_name, t.Debit, t.Credit, t.UpdateBy,
-                (@CumulativeSum := @CumulativeSum + t.Debit - t.Credit) as balance
-                FROM transections t
-                JOIN saller_information s ON t.Member_code = s.id
-                WHERE t.StoreID = :headCode
-                AND t.VDate >= :startDate
-                AND t.VDate <= :endDate
+                $getmode = DB::select(DB::raw("
+                SELECT
+                    t.id,
+                    t.VDate,
+                    t.Description,
+                    COALESCE(s.company_name, eh.name) AS name,
+                    t.Debit,
+                    t.Credit,
+                    t.UpdateBy,
+                    (@CumulativeSum := @CumulativeSum + t.Debit - t.Credit) as balance
+                FROM
+                    transections t
+                LEFT JOIN
+                    saller_information s
+                    ON t.Member_code = s.id AND t.Member_code != 0
+                LEFT JOIN
+                    expense_heads eh
+                    ON t.Member_code = 0 AND eh.id = t.HeadCode
+                WHERE
+                    t.StoreID = :headCode
+                    AND t.VDate >= :startDate
+                    AND t.VDate <= :endDate
             "), [
-                'headCode' => $request->headCode,
                 'startDate' => $request->startDate,
-                'endDate' => $request->endDate
+                'endDate' => $request->endDate,
+                'headCode' => $request->headCode,
             ]);
+
         }
 
         // Calculate total debit, credit, and balance manually
@@ -177,6 +202,7 @@ class reportController extends Controller
 
     public function getModewiseInvoice(Request $request)
     {
+       
         if($request->headCode == 'Cash')
         {
             $info = 'Cash';
@@ -202,42 +228,67 @@ class reportController extends Controller
         DB::statement('SET @CumulativeSum := ?', [$openBal->balance]);
 
         if ($request->headCode == 'Cash') {
-            // Initialize cumulative sum variable
-            DB::statement("SET @CumulativeSum := 0;");
-
-            // Run the main query
+            // Run the main query for 'Cash'
             $getmode = DB::select(DB::raw("
-                SELECT t.id, t.VDate, t.Description, s.company_name, t.Debit, t.Credit, t.UpdateBy,
-                (@CumulativeSum := @CumulativeSum + t.Debit - t.Credit) as balance
-                FROM transections t
-                JOIN saller_information s ON t.Member_code = s.id
-                WHERE t.UpdateBy = :headCode
-                AND t.VDate >= :startDate
-                AND t.VDate <= :endDate
+                SELECT
+                    t.id,
+                    t.VDate,
+                    t.Description,
+                    COALESCE(s.company_name, eh.name) AS name,
+                    t.Debit,
+                    t.Credit,
+                    t.UpdateBy,
+                    (@CumulativeSum := @CumulativeSum + t.Debit - t.Credit) as balance
+                FROM
+                    transections t
+                LEFT JOIN
+                    saller_information s
+                    ON t.Member_code = s.id AND t.Member_code != 0
+                LEFT JOIN
+                    expense_heads eh
+                    ON t.Member_code = 0 AND eh.id = t.HeadCode
+                WHERE
+                    t.UpdateBy = 'Cash'
+                    AND t.VDate >= :startDate
+                    AND t.VDate <= :endDate
             "), [
-                'headCode' => $request->headCode,
                 'startDate' => $request->start_date,
                 'endDate' => $request->end_date
             ]);
         } else {
-            // Initialize cumulative sum variable
-            DB::statement("SET @CumulativeSum := 0;");
 
-            // Run the main query
-            $getmode = DB::select(DB::raw("
-                SELECT t.id, t.VDate, t.Description, s.company_name, t.Debit, t.Credit, t.UpdateBy,
-                (@CumulativeSum := @CumulativeSum + t.Debit - t.Credit) as balance
-                FROM transections t
-                JOIN saller_information s ON t.Member_code = s.id
-                WHERE t.StoreID = :headCode
-                AND t.VDate >= :startDate
-                AND t.VDate <= :endDate
+                $getmode = DB::select(DB::raw("
+                SELECT
+                    t.id,
+                    t.VDate,
+                    t.Description,
+                    COALESCE(s.company_name, eh.name) AS name,
+                    t.Debit,
+                    t.Credit,
+                    t.UpdateBy,
+                    (@CumulativeSum := @CumulativeSum + t.Debit - t.Credit) as balance
+                FROM
+                    transections t
+                LEFT JOIN
+                    saller_information s
+                    ON t.Member_code = s.id AND t.Member_code != 0
+                LEFT JOIN
+                    expense_heads eh
+                    ON t.Member_code = 0 AND eh.id = t.HeadCode
+                WHERE
+                    t.StoreID = :headCode
+                    AND t.VDate >= :startDate
+                    AND t.VDate <= :endDate
             "), [
-                'headCode' => $request->headCode,
                 'startDate' => $request->start_date,
-                'endDate' => $request->end_date
+                'endDate' => $request->end_date,
+                'headCode' => $request->headCode,
             ]);
+
         }
+
+
+
 
         // Calculate total debit, credit, and balance manually
         $debitSum = 0;

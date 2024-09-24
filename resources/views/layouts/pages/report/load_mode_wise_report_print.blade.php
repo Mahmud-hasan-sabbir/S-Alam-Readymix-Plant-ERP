@@ -96,7 +96,7 @@
                 <tr>
                     <td scope="col">{{ $loop->iteration }}</td>
                     <td scope="col">{{ $item->VDate }}</td>
-                    <td scope="col">{{ $item->company_name }}</td>
+                    <td scope="col">{{ $item->name }}</td>
                     <td scope="col">{{ $item->UpdateBy }}</td>
                     <td scope="col">{{ $item->Description }}</td>
                     <td scope="col">{{ $item->Debit }}</td>
