@@ -1,0 +1,171 @@
+
+<x-app-layout>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <!-- card header -->
+                <div class="card-header bg-primary">
+                    <h4 class="card-title">Mode Wise Transaction</h4>
+                    <div>
+                        <button id="print" class="btn btn-sm btn-success"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Print</button>
+                        
+                    </div>
+
+                </div>
+                <!-- card body -->
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label class="col-md-4 col-form-label font-weight-bold" >Form</label>
+                                <div class="col-md-8">
+                                    <input type="date" id="start_date" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label class="col-md-2 col-form-label font-weight-bold" >To</label>
+                                <div class="col-md-8">
+                                    <input type="date" id="end_date" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label class="col-md-4 col-form-label font-weight-bold">Mode Name</label>
+                                <div class="col-md-8">
+
+                                    <select name="headName" id="accountId" class="form-control dropdwon_select head" style="margin-left: -20px">
+                                        <option value="" selected disabled>Select Account</option>
+                                        <option value="Cash">Cash</option>
+                                        @foreach ($bankName as $item )
+                                            <option value="{{ $item->id }}">{{ $item->bank_name }}</option>
+                                         @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-8">
+                                   <button type="submit" id="filter" class="btn btn-success btn-sm">Filter</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <table class="table" id="data-table">
+                            <thead class="thead-dark"  style="display: none">
+                              <tr>
+                                <th>Sl. No.</th>
+                                <th>Date</th>
+                                <th>Particulars</th>
+                                <th>Mode Name</th>
+                                <th style="width: 20%;">Description</th>
+                                <th>Debit (Deposite)</th>
+                                <th>Credit</th>
+                                <th>Balance</th>
+                              </tr>
+                            </thead>
+                            <tbody id="tbody">
+
+                            </tbody>
+                          </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
+
+<script>
+    $(document).on('click','#filter',function(){
+        var startDate = $('#start_date').val();
+        var endDate = $('#end_date').val();
+        var headCode = $('#accountId').val();
+
+
+            $.ajax({
+                url:'{{ route('get_modeWiseReport') }}',
+                method:'GET',
+                dataType:"html",
+                data:{startDate,endDate,headCode},
+                success:function(response){
+                    console.log(response);
+                    $('#tbody').html(response);
+
+                    if (response.trim() === '') {
+
+                        $('#data-table thead').hide();
+                    } else {
+
+                            $('#data-table thead').show();
+                            $('#tbody').html(response);
+                    }
+
+                }
+            });
+
+    });
+
+
+
+        $(document).on('click', '#print', function() {
+            var startDate = $('#start_date').val();
+            var endDate = $('#end_date').val();
+            var headCode = $('#accountId').val();
+
+            if (startDate && endDate && headCode) {
+                window.location.href = '{{ route('get_modewise_invoice') }}' + '?start_date=' + startDate + '&end_date=' + endDate + '&headCode=' + headCode;
+            } else {
+                alert('Please select a date range and supplier before printing.');
+            }
+        });
+
+</script>
+
+<script>
+     $('.dropdwon_select').each(function () {
+            $(this).select2({
+                dropdownParent: $(this).parent()
+            });
+        });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
