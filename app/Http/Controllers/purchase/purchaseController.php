@@ -12,7 +12,7 @@ use App\Models\purchase\Purchase;
 use App\Models\SallerInformation;
 use App\Models\datasetting\storeName;
 use Illuminate\Support\Facades\Auth;
-use App\Models\purchase\purchaseDetails;
+use App\Models\purchase\PurchaseDetails;
 use App\Models\stockValue;
 
 
@@ -149,7 +149,7 @@ class purchaseController extends Controller
 
         public function updatePurchaseEdit(Request $request)
         {
-            
+
             $purchaseupdate = Purchase::findOrFail($request->hiddenid);
             $purchaseupdate->PO_No = $request->po_no;
             $purchaseupdate->order_date = $request->inv_date;

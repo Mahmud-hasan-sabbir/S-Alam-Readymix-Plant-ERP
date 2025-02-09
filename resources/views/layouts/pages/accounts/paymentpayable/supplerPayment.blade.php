@@ -98,7 +98,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label for="" class="col-md-5">Payment Reason</label>
@@ -109,7 +109,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="row" >
                             <div class="col-md-12">
@@ -148,7 +148,7 @@
                             </div>
                         </div>
 
-                        
+
 
                         <div class="row" id="bankNameRow" style="display: none">
                             <div class="col-md-12">
@@ -814,7 +814,7 @@ $(document).ready(function () {
 <script>
     $(document).on('change', '#supplierId', function() {
         var id = $(this).val();
-        
+
         $.ajax({
             url: "{{ route('get_totalamount_sup') }}",
             method: 'GET',

@@ -125,6 +125,66 @@
                    
                   
                 </tr>
+                <tr class="addr" >
+                  <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
+          
+                  </td>
+                 
+                  <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+          
+                  </td>
+                  <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+          
+                  </td>
+                  <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+          
+                  </td>
+                  <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+          
+                  </td>
+                  <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+                      <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;">Discount Amount : </h6>
+                  </td>
+                  <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
+                      <h6 style="font-weight: bold;padding:0px;margin:0px" id="" >
+                      </h6>
+                  </td>
+                  <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
+                      <h6 style="font-weight: bold;padding:0px;margin:0px" >{{ $totaldis }}</h6>
+                  </td>
+                 
+                
+              </tr>
+              <tr class="addr" >
+               <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
+       
+               </td>
+              
+               <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+       
+               </td>
+               <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+       
+               </td>
+               <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+       
+               </td>
+               <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+       
+               </td>
+               <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+                   <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;">Net Amount : </h6>
+               </td>
+               <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
+                   <h6 style="font-weight: bold;padding:0px;margin:0px" id="" >
+                   </h6>
+               </td>
+               <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
+                   <h6 style="font-weight: bold;padding:0px;margin:0px" >{{ $totalpurchaseamount - $totaldis }}</h6>
+               </td>
+              
+             
+           </tr>
             </t-footer>
    	  </table>
    	</div>
@@ -189,13 +249,16 @@
               </tr>
            </thead>
            <tbody>
-            <tr class=" text-center">
-                <?php $balance = $totalpurchaseamount - $totalpaymentamount ?>
-                <th >{{ $totalpurchaseamount }}</th>
-                <th >{{ $totalpaymentamount }}</th>
-                <th>{{ $balance }}</th>
-                <th >{{ $balance > 0 ? 'Due' : 'paid' }}</th>
-             </tr>
+            <tr class="text-center">
+               <?php 
+                   $netamount = $totalpurchaseamount - $totaldis; // Added missing semicolon
+                   $balance = $netamount - $totalpaymentamount; // Added missing semicolon
+               ?>
+               <th>{{ $netamount }}</th>
+               <th>{{ $totalpaymentamount }}</th>
+               <th>{{ $balance }}</th>
+               <th>{{ $balance > 0 ? 'Due' : 'Paid' }}</th>
+           </tr>
            </tbody>
           
         </table>

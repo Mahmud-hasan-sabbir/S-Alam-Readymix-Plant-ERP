@@ -858,12 +858,15 @@ class reportController extends Controller
             $totalpurchaseamount += $purchase->purchaseDetails->sum('sub_total');
         }
 
-        $totaldiscount = $purchases->sum('discount');
+        // $totaldiscount = $purchases->sum('discount');
 
         $payments = paymentForSupplier::where('supplier_id', $request->supplierId)
                     ->whereBetween('pay_date', [$request->startDate, $request->endDate])
-                    ->select('pay_date', 'pay_mode', 'pay_amount')
+                    ->select('pay_date', 'pay_mode', 'pay_amount','discount_amount')
                     ->get();
+
+        $totaldiscount = $payments->sum('discount_amount');
+       
 
         $totalpaymentamount = $payments->sum('pay_amount');
 
@@ -895,10 +898,16 @@ class reportController extends Controller
             $totalpurchaseamount += $purchase->purchaseDetails->sum('sub_total');
         }
 
+        
+        
+        
         $payments = paymentForSupplier::where('supplier_id', $request->supplier_id)
                     ->whereBetween('pay_date', [$request->start_date, $request->end_date])
-                    ->select('pay_date', 'pay_mode', 'pay_amount')
+                    ->select('pay_date', 'pay_mode', 'pay_amount','discount_amount')
                     ->get();
+
+        $totaldis = $payments->sum('discount_amount');
+                  
 
 
 
@@ -908,7 +917,7 @@ class reportController extends Controller
 
 
         // Pass both purchases and grouped payments to the view
-        return view('layouts.pages.report.invoicedatewisereport', compact('purchases', 'payments','totalpurchaseamount','totalpaymentamount','info'));
+        return view('layouts.pages.report.invoicedatewisereport', compact('purchases', 'payments','totalpurchaseamount','totalpaymentamount','info','totaldis'));
     }
 
 

@@ -92,7 +92,9 @@ class AccountController extends Controller
 
     public function getTotalamountSup(Request $request)
     {
-        $amountDue = transection::where('Member_code', $request->id)->sum('Debit') - transection::where('Member_code', $request->id)->sum('Credit');
+        $amountDue = (int) (transection::where('Member_code', $request->id)->sum('Debit') - transection::where('Member_code', $request->id)->sum('Credit'));
+
+
         // $totalPurchaseAmount = Purchase::where('supplier_id', $request->id)->where('is_approve', 1)
         //     ->sum('total_purchase_amount');
         // $totalPaymentAmount = PaymentForSupplier::where('supplier_id', $request->id)
@@ -106,6 +108,8 @@ class AccountController extends Controller
         // }else{
         //     $amountDue = $totalPurchaseAmount - $totalPaymentAmount;
         // }
+
+
 
 
         return response()->json(['amount_due' => $amountDue]);
@@ -122,7 +126,7 @@ class AccountController extends Controller
         $paymentForSupplier = new paymentForSupplier();
         $paymentForSupplier->supplier_id = $request->supplier_id;
         $paymentForSupplier->po_no = $request->po_no;
-        $paymentForSupplier->pay_reason = $request->pay_reason;
+        $paymentForSupplier->pay_reason = 'Purchase Materials';
         $paymentForSupplier->pay_mode = $request->pay_mode;
         $paymentForSupplier->pay_date = $request->pay_date;
         $paymentForSupplier->bank_name = $request->bank_name;
@@ -200,8 +204,9 @@ class AccountController extends Controller
 
     public function supplierPaymentCancaled($id)
     {
-        paymentForSupplier::where('id', $id)->update(['is_approve' => 2]);
-        $notification = ['messege' => 'Payment Cancaled Successfully', 'alert-type' => 'success'];
+        // paymentForSupplier::where('id', $id)->update(['is_approve' => 2]);
+        paymentForSupplier::where('id', $id)->delete();
+        $notification = ['messege' => 'Payment delete Successfully', 'alert-type' => 'success'];
         return redirect()->back()->with($notification);
     }
 
@@ -223,7 +228,7 @@ class AccountController extends Controller
         DB::table('transections')
         ->where('Member_code', $request->id)
         ->sum(DB::raw("REPLACE(Debit, ',', '')"));
-       
+
         // $invoices = Invoice::where('cus_id', $request->id)->where('status', 1)->get();
 
         // // Sum up the total purchase amount from the invoices, removing any commas
