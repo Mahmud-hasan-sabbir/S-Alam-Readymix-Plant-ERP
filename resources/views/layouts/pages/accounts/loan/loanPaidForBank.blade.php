@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-header bg-primary">
                     <h4 class="card-title">Loan Paid For bank</h4>
-                    
+
                     <a href="" data-toggle="modal" data-target=".bd-example-modal-lg" class="btn btn-sm btn-success p-1 px-2"><i class="fa fa-plus"></i></i><span class="btn-icon-add"></span>Create</a>
                 </div>
                 <div class="card-body">
@@ -85,9 +85,9 @@
                                     </div>
                                 </div>
                             </div>
-                           
+
                         </div>
-                    
+
 
                         <div class="row mt-2">
                             <div class="col-md-6 bankacc_no">
@@ -142,14 +142,14 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                         </div>
                         <div class="row mt-2">
                             <div class="col-md-12">
                                 <label class="form-label" for="remarks"> Notes:</label>
                                     <textarea name="remarks" id="remarks" placeholder="Notes" class="form-control" ></textarea>
                             </div>
-                            
+
                         </div>
                     </div>
                     <div class="modal-footer" style="height:50px">
@@ -190,7 +190,7 @@
                  $('#advancedsalaryform').attr('action', updateRoute);
                  $('#advancedsalaryform').find('button[type="submit"]').text('Update');
 
-                   
+
                 }
             });
         });
@@ -230,7 +230,7 @@
                     $('#remarks').prop('disabled', true);
                  $('#advancedsalaryform').find('button[type="submit"]').hide();
 
-                   
+
                 }
          });
      });
@@ -243,7 +243,7 @@
 
 $(document).on('change', '#bankname', function() {
         var id = $(this).val();
-        alert(id);
+      
         $.ajax({
             url: "{{ route('get_bank_detail') }}",
             method: 'GET',

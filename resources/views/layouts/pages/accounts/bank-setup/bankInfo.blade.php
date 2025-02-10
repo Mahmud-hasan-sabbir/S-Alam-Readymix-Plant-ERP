@@ -43,8 +43,18 @@
                                     </td>
                                 </tr>
                                 @endforeach
-                            
+
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right"><strong>Total:</strong></td>
+                                    <td class="text-right"><strong>{{ $formattedTotalBal }}</strong></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+
                         </table>
                     </div>
                 </div>

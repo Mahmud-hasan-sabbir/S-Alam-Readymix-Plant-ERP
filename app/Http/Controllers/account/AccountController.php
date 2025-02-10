@@ -28,17 +28,33 @@ class AccountController extends Controller
 {
     public function bankInfo()
     {
-        // $allbankinfo = BankInfo::orderBy('id','DESC')->get();
-         $allbankinfo = BankInfo::all();
-         $banksWithBalances = $allbankinfo->map(function($item) {
+        $allbankinfo = BankInfo::all();
+
+        $banksWithBalances = $allbankinfo->map(function($item) {
             $bankTransactions = Transection::where('StoreId', $item->id)->get();
             $debit = $bankTransactions->sum('Debit');
             $credit = $bankTransactions->sum('Credit');
             $balance = $debit - $credit;
+
+            // Store the raw balance for calculations
+            $item->raw_balance = $balance;
+
+            // Store the formatted balance for display
             $item->balance = number_format($balance, 2, '.', ',');
             return $item;
         });
-        return view('layouts.pages.accounts.bank-setup.bankInfo',compact('banksWithBalances'));
+
+        // Use raw_balance (numeric) instead of balance (formatted string)
+        $totalbal = $banksWithBalances->sum('raw_balance');
+
+        // // Format the total balance for display
+        $formattedTotalBal = number_format($totalbal, 2, '.', ',');
+
+
+
+
+
+        return view('layouts.pages.accounts.bank-setup.bankInfo',compact('banksWithBalances','formattedTotalBal'));
     }
 
     public function storeBankInfo(Request $request)
@@ -93,6 +109,8 @@ class AccountController extends Controller
     public function getTotalamountSup(Request $request)
     {
         $amountDue = (int) (transection::where('Member_code', $request->id)->sum('Debit') - transection::where('Member_code', $request->id)->sum('Credit'));
+        $formattedAmount = number_format($amountDue, 0, '.', ',');
+
 
 
         // $totalPurchaseAmount = Purchase::where('supplier_id', $request->id)->where('is_approve', 1)
@@ -112,7 +130,7 @@ class AccountController extends Controller
 
 
 
-        return response()->json(['amount_due' => $amountDue]);
+        return response()->json(['amount_due' => $formattedAmount]);
     }
 
     public function getAccNo(Request $request)
@@ -222,12 +240,14 @@ class AccountController extends Controller
 
     public function getcusTotalamount(Request $request)
     {
-        $formattedAmountDue = DB::table('transections')
+        $formattedAmountDue = (int) DB::table('transections')
         ->where('Member_code', $request->id)
         ->sum(DB::raw("REPLACE(Credit, ',', '')")) -
         DB::table('transections')
         ->where('Member_code', $request->id)
         ->sum(DB::raw("REPLACE(Debit, ',', '')"));
+
+        $formattedAmount = number_format($formattedAmountDue, 0, '.', ',');
 
         // $invoices = Invoice::where('cus_id', $request->id)->where('status', 1)->get();
 
@@ -256,8 +276,10 @@ class AccountController extends Controller
         //     $formattedAmountDue .= " (ADV)";
         // }
 
+
+
         // Return the formatted amount due as a JSON response
-        return response()->json(['amount_due' => $formattedAmountDue]);
+        return response()->json(['amount_due' => $formattedAmount]);
     }
 
 
@@ -390,7 +412,7 @@ class AccountController extends Controller
             }
 
             $openingBalance->VDate = $request->opening_date;
-            $openingBalance->Description = 'Add Money';
+            $openingBalance->Description = $request->remark;
             $openingBalance->CreateBy = Auth::user()->id;
             $openingBalance->save();
             $notification = ['messege' => 'Add Money Saved Successfully', 'alert-type' => 'success'];
@@ -707,22 +729,55 @@ class AccountController extends Controller
         return view('layouts.pages.accounts.loan.loanPaidForBank',compact('allbankName','paidloan'));
     }
 
+    // public function getBankDetail(Request $request)
+    // {
+    //     dd($request->id);
+    //     $getdetail = bankLoan::where('bank_id',$request->id)->where('is_approve',1)->get();
+    //     $value = transection::where('StoreID',$request->id)->sum('Debit') - transection::where('StoreID',$request->id)->sum('Credit');
+    //     $lastamount = paidLoanAmount::where('bank_id',$request->id)->sum('pay_loan_amount');
+
+    //     $totalloanamount = $getdetail->sum('loan_amount');
+    //     $totalinterest = $getdetail->pluck('interest_loan');
+    //     $accno = $getdetail->pluck('acc_no');
+    //     return response()->json([
+    //         'totalloanamount' => $totalloanamount,
+    //         'totalinterest' => $totalinterest[0],
+    //         'totalbankvalue' => $value,
+    //         'accno' => $accno[0],
+    //     ]);
+
+    // }
+
+
     public function getBankDetail(Request $request)
     {
-        $getdetail = bankLoan::where('bank_id',$request->id)->where('is_approve',1)->get();
-        $value = transection::where('StoreID',$request->id)->sum('Debit') - transection::where('StoreID',$request->id)->sum('Credit');
+        $getdetail = bankLoan::where('bank_id', $request->id)
+            ->where('is_approve', 1)
+            ->get();
 
+        $value = transection::where('StoreID', $request->id)->sum('Debit')
+            - transection::where('StoreID', $request->id)->sum('Credit');
+
+        $lastamount = paidLoanAmount::where('bank_id', $request->id)->sum('pay_loan_amount');
+
+        // Get the total loan amount
         $totalloanamount = $getdetail->sum('loan_amount');
-        $totalinterest = $getdetail->pluck('interest_loan');
-        $accno = $getdetail->pluck('acc_no');
-        return response()->json([
-            'totalloanamount' => $totalloanamount,
-            'totalinterest' => $totalinterest[0],
-            'totalbankvalue' => $value,
-            'accno' => $accno[0],
-        ]);
 
+        // Subtract the paid loan amount from the total loan amount
+        $remainingLoanAmount = $totalloanamount - $lastamount;
+
+        // Extract first interest and account number safely
+        $totalinterest = $getdetail->pluck('interest_loan')->first();
+        $accno = $getdetail->pluck('acc_no')->first();
+
+        return response()->json([
+            'totalloanamount' => $remainingLoanAmount,  // Updated value
+            'totalinterest' => $totalinterest,
+            'totalbankvalue' => $value,
+            'accno' => $accno,
+        ]);
     }
+
 
 
     public function storeLoanPaid(Request $request)

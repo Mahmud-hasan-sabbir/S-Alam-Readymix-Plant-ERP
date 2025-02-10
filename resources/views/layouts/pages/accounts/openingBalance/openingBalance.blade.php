@@ -33,7 +33,7 @@
                                                </select>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="row mt-2">
                                             <label for="" class="col-md-4 ">Type</label>
                                             <div class="col-md-8">
@@ -54,6 +54,12 @@
                                             <label for="" class="col-md-4 ">Date</label>
                                             <div class="col-md-8">
                                                 <input type="date" name="opening_date" class="form-control" value="{{ old('date') ? old('date'):  date('Y-m-d') }}">
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <label for="" class="col-md-4 ">Remark</label>
+                                            <div class="col-md-8">
+                                                <textarea name="remark" id="" cols="3" rows="3" class="form-control"></textarea>
                                             </div>
                                         </div>
                                         <div class="row mt-4">

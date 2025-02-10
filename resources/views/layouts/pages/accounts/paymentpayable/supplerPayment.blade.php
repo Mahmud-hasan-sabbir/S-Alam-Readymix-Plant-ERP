@@ -183,7 +183,7 @@
                               <div class="form-group row">
                                 <label for="" class="col-md-5"> Check Number</label>
                                 <div class="col-md-7">
-                                  <input type="text" name="check_num" readonly id="checkNumber" class="form-control" placeholder="Enter Check Number">
+                                  <input type="text" name="check_num"   class="form-control" placeholder="Enter Check Number">
                                 </div>
                               </div>
                             </div>
@@ -364,7 +364,7 @@
                                   <div class="form-group row">
                                     <label for="" class="col-md-5"> Check Number</label>
                                     <div class="col-md-7">
-                                      <input type="text" name="check_num" readonly id="checkno" class="form-control" placeholder="Enter Check Number">
+                                      <input type="text" name="check_num"  id="checkno" class="form-control" placeholder="Enter Check Number">
                                     </div>
                                   </div>
                                 </div>
@@ -613,13 +613,12 @@
 
      if (payMode.value === 'Bank') {
        checkNumberRow.style.display = 'block';
-       checkDateRow.style.display = 'block';
        bankNameRow.style.display = 'block';
        bankaccountidrow.style.display = 'block';
 
      } else {
        checkNumberRow.style.display = 'none';
-       checkDateRow.style.display = 'none';
+
        bankNameRow.style.display = 'none';
        bankaccountidrow.style.display = 'none';
 
@@ -647,13 +646,13 @@ $(document).ready(function () {
 
         if (payMode === "Bank") {
             checkNumberRow.show();
-            checkDateRow.show();
+
             bankNameRow.show();
             bankaccrowedit.show();
             cashaccrowedit.hide();
         } else {
             checkNumberRow.hide();
-            checkDateRow.hide();
+
             bankNameRow.hide();
             bankaccrowedit.hide();
             cashaccrowedit.show();
@@ -769,11 +768,11 @@ $(document).ready(function () {
 
         if (payMode === "Bank") {
             checkNumberRow.show();
-            checkDateRow.show();
+
             bankNameView.show();
         } else {
             checkNumberRow.hide();
-            checkDateRow.hide();
+           
             bankNameView.hide();
         }
     }
@@ -831,21 +830,21 @@ $(document).ready(function () {
     });
 
 
-    $(document).on('change', '#bankName', function() {
-        var id = $(this).val();
-        $.ajax({
-            url: "{{ route('get_acc_no') }}",
-            method: 'GET',
-            dataType: 'JSON',
-            data: {
-                id: id
-            },
-            success: function(data) {
-                console.log(data);
-                $('#checkNumber').val(data.acc_no);
-            }
-        });
-    });
+    // $(document).on('change', '#bankName', function() {
+    //     var id = $(this).val();
+    //     $.ajax({
+    //         url: "{{ route('get_acc_no') }}",
+    //         method: 'GET',
+    //         dataType: 'JSON',
+    //         data: {
+    //             id: id
+    //         },
+    //         success: function(data) {
+    //             console.log(data);
+    //             $('#checkNumber').val(data.acc_no);
+    //         }
+    //     });
+    // });
 
 </script>
 

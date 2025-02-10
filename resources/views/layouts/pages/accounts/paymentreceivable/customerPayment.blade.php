@@ -93,7 +93,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label for="" class="col-md-4"> Payment Reason</label>
@@ -104,7 +104,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="row">
                             <div class="col-md-12">
                               <div class="form-group row">
@@ -150,7 +150,7 @@
                               <div class="form-group row">
                                 <label for="" class="col-md-4">Account Number</label>
                                 <div class="col-md-8">
-                                  <input type="text" name="check_num" id="checkNumber" class="form-control" placeholder="Check Number">
+                                  <input type="text" name="check_num"  class="form-control" placeholder="Check Number">
                                 </div>
                               </div>
                             </div>
@@ -237,12 +237,12 @@
                                         <label for="" class="col-md-5"> Total Amount</label>
                                         <div class="col-md-7">
                                             <input type="text" readonly id="totalamountedit" class="form-control">
-    
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group row">
                                         <label for="" class="col-md-5"> Payment Reason</label>
@@ -250,12 +250,12 @@
                                             <select name="pay_reason" id="reasonedit" class="form-control">
                                                 <option value="" @disabled(true)>Select a payment reason</option>
                                                 <option value="Materials Sale">Materials Sale</option>
-                                               
+
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="row">
                                 <div class="col-md-12">
                                   <div class="form-group row">
@@ -389,12 +389,12 @@
                                         <label for="" class="col-md-5"> Total Amount</label>
                                         <div class="col-md-7">
                                             <input type="text" readonly id="totalamountview" class="form-control">
-    
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group row">
                                         <label for="" class="col-md-5"> Payment Reason</label>
@@ -402,12 +402,12 @@
                                             <select name="pay_reason" @selected(true) disabled id="reasonview" class="form-control">
                                                 <option value="" @disabled(true)>Select a payment reason</option>
                                                 <option value="Materials Sale">Materials Sale</option>
-                                               
+
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="row">
                                 <div class="col-md-12">
                                 <div class="form-group row">
@@ -526,12 +526,12 @@
 
      if (payMode.value === 'Bank') {
        checkNumberRow.style.display = 'block';
-       checkDateRow.style.display = 'block';
+
        bankNameRow.style.display = 'block';
 
      } else {
        checkNumberRow.style.display = 'none';
-       checkDateRow.style.display = 'none';
+
        bankNameRow.style.display = 'none';
 
      }
@@ -555,11 +555,11 @@ $(document).ready(function () {
 
         if (payMode === "Bank") {
             checkNumberRow.show();
-            checkDateRow.show();
+
             bankNameRow.show();
         } else {
             checkNumberRow.hide();
-            checkDateRow.hide();
+
             bankNameRow.hide();
         }
     }
@@ -647,11 +647,11 @@ $(document).ready(function () {
 
         if (payMode === "Bank") {
             checkNumberRow.show();
-            checkDateRow.show();
+
             bankNameView.show();
         } else {
             checkNumberRow.hide();
-            checkDateRow.hide();
+           
             bankNameView.hide();
         }
     }
@@ -690,6 +690,7 @@ $(document).ready(function () {
 <script>
     $(document).on('change', '#customerId', function() {
         var id = $(this).val();
+
         $.ajax({
             url: "{{ route('get_totalamount') }}",
             method: 'GET',
