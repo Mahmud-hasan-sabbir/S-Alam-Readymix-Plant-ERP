@@ -362,9 +362,13 @@ class reportController extends Controller
         ->groupBy('Member_code')
         ->get();
 
+
+
         $totalsupdebit =  $totalSupplierReport->sum('total_debit');
         $totalsupcredit =  $totalSupplierReport->sum('total_credit');
         $totaldue = $totalsupdebit -  $totalsupcredit;
+        $advanced = $totalsupcredit -  $totalsupdebit;
+        
 
 
 
@@ -866,7 +870,7 @@ class reportController extends Controller
                     ->get();
 
         $totaldiscount = $payments->sum('discount_amount');
-       
+
 
         $totalpaymentamount = $payments->sum('pay_amount');
 
@@ -878,36 +882,64 @@ class reportController extends Controller
     public function getSupTotalInvoice(Request $request)
     {
 
+        $datass = Purchase::with('purchaseDetails.material')
+        ->where('supplier_id', $request->supplier_id)
+        ->whereBetween('order_date', [$request->start_date, $request->end_date])
+        ->get();
+
+       $totalpurchaseamount = $datass->flatMap->purchaseDetails->sum('sub_total');
+
+
+
+
+
+        // $query = Purchase::with('purchaseDetails.material');
+
+        // // Filter by supplier ID if provided
+        // if ($request->has('supplierId') && !empty($request->supplierId)) {
+        //     $query->where('supplier_id', $request->supplierId);
+        // }
+
+        // // Filter by date range if provided
+        // if ($request->has('startDate') && !empty($request->startDate) && $request->has('endDate') && !empty($request->endDate)) {
+        //     $query->whereBetween('order_date', [$request->startDate, $request->endDate]);
+        // }
+
+        // $purchases = $query->get();
+
         $info = SallerInformation::find($request->supplier_id);
-        $query = Purchase::with('purchaseDetails.material');
+        // $query = Purchase::with('purchaseDetails.material');
 
-        if ($request->has('supplierId') && !empty($request->supplierId)) {
-            $query->where('supplier_id', $request->supplierId);
-        }
 
-        if ($request->has('startDate') && !empty($request->startDate) && $request->has('endDate') && !empty($request->endDate)) {
-            $query->whereBetween('order_date', [$request->startDate, $request->endDate]);
-        }
+        // if ($request->has('supplierId') && !empty($request->supplierId)) {
+        //     $query->where('supplier_id', $request->supplierId);
+        // }
 
-        $purchases = $query->get();
+        // if ($request->has('startDate') && !empty($request->startDate) && $request->has('endDate') && !empty($request->endDate)) {
+        //     $query->whereBetween('order_date', [$request->startDate, $request->endDate]);
+        // }
 
-        $totalpurchaseamount = 0;
+        // $purchases = $query->get();
 
-        foreach ($purchases as $purchase) {
 
-            $totalpurchaseamount += $purchase->purchaseDetails->sum('sub_total');
-        }
 
-        
-        
-        
+        // $totalpurchaseamount = 0;
+
+        // foreach ($purchases as $purchase) {
+
+        //     $totalpurchaseamount += $purchase->purchaseDetails->sum('sub_total');
+        // }
+
+
+
+
         $payments = paymentForSupplier::where('supplier_id', $request->supplier_id)
                     ->whereBetween('pay_date', [$request->start_date, $request->end_date])
                     ->select('pay_date', 'pay_mode', 'pay_amount','discount_amount')
                     ->get();
 
         $totaldis = $payments->sum('discount_amount');
-                  
+
 
 
 
@@ -917,7 +949,7 @@ class reportController extends Controller
 
 
         // Pass both purchases and grouped payments to the view
-        return view('layouts.pages.report.invoicedatewisereport', compact('purchases', 'payments','totalpurchaseamount','totalpaymentamount','info','totaldis'));
+        return view('layouts.pages.report.invoicedatewisereport', compact('datass', 'payments','totalpurchaseamount','totalpaymentamount','info','totaldis'));
     }
 
 

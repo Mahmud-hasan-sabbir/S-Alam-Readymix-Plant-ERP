@@ -545,6 +545,7 @@ class AccountController extends Controller
             'pay_date' => $request->pay_date,
             'pay_amount' => $request->pay_amountedit,
             'remarks' => $request->remarks,
+            'check_num' => $request->check_num,
         ]);
 
 

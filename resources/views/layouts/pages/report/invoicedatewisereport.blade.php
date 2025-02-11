@@ -28,14 +28,14 @@
 
 <body>
 <!-- Container -->
-<div class="container-fluid invoice-container"> 
+<div class="container-fluid invoice-container">
    <!-- Header -->
    <header>
       <div class="row align-items-center gy-3">
-         <div class="col-sm-1 text-center text-sm-start"> 
+         <div class="col-sm-1 text-center text-sm-start">
             <img id="logo" src="{{ asset('/public/logo.png') }}" title="Koice" alt="Koice" width="100px" />
          </div>
-         
+
          <div class="col-sm-11 text-center text-sm-end">
             <h4 class="text-center" style="font-weight: 700;">S. Alam Readymix Concrete Plant</h4>
             <h6 class="text-center" style="font-weight: 500;">Supplier Ledger – Delivery Basis</h6>
@@ -53,7 +53,7 @@
                <span style="font-weight: 700;">Address:</span> {{ $info->Address }} <br>
                <span style="font-weight: 700;">Opening Date:</span> {{ $info->opening_date }} <br>
                <span style="font-weight: 700;">Contact Number:</span> {{ $info->mobile_no }} <br>
-            </p>         
+            </p>
          </div>
 
          <div class="col-sm-3 text-end">
@@ -77,7 +77,7 @@
             </thead>
 
             <tbody class="text-center">
-                @foreach ($purchases as $purchase)
+                @foreach ($datass as $purchase)
                 @foreach ($purchase->purchaseDetails as $detail)
                 <tr>
                     <td>{{ $loop->parent->iteration }}</td>
@@ -92,25 +92,25 @@
                 @endforeach
             @endforeach
 
-              
+
             </tbody>
             <t-footer style="display: none">
                 <tr class="addr" >
                     <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
-            
+
                     </td>
-                   
+
                     <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-            
-                    </td>
-                    <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-            
+
                     </td>
                     <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-            
+
                     </td>
                     <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-            
+
+                    </td>
+                    <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
                     </td>
                     <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
                         <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;">Total Purchase Amount : </h6>
@@ -122,25 +122,25 @@
                     <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
                         <h6 style="font-weight: bold;padding:0px;margin:0px" >{{ $totalpurchaseamount }}</h6>
                     </td>
-                   
-                  
+
+
                 </tr>
                 <tr class="addr" >
                   <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
-          
+
                   </td>
-                 
+
                   <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-          
-                  </td>
-                  <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-          
+
                   </td>
                   <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-          
+
                   </td>
                   <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-          
+
+                  </td>
+                  <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
                   </td>
                   <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
                       <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;">Discount Amount : </h6>
@@ -152,25 +152,25 @@
                   <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
                       <h6 style="font-weight: bold;padding:0px;margin:0px" >{{ $totaldis }}</h6>
                   </td>
-                 
-                
+
+
               </tr>
               <tr class="addr" >
                <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
-       
+
                </td>
-              
+
                <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-       
-               </td>
-               <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-       
+
                </td>
                <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-       
+
                </td>
                <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-       
+
+               </td>
+               <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+
                </td>
                <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
                    <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;">Net Amount : </h6>
@@ -182,8 +182,8 @@
                <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
                    <h6 style="font-weight: bold;padding:0px;margin:0px" >{{ $totalpurchaseamount - $totaldis }}</h6>
                </td>
-              
-             
+
+
            </tr>
             </t-footer>
    	  </table>
@@ -203,22 +203,22 @@
             <tbody>
                 @foreach ($payments as $item)
                 <tr>
-                   
+
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->pay_date }}</td>
                     <td>{{ $item->pay_amount }}</td>
                     <td>{{ $item->pay_mode }}</td>
-                   
-                    
+
+
                 </tr>
                 @endforeach
             </tbody>
             <t-footer style="display: none">
                 <tr class="addr" >
-                   
-                    
+
+
                     <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-            
+
                     </td>
                     <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
                         <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;">Total Paid Amount : </h6>
@@ -230,8 +230,8 @@
                     <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
                         <h6 style="font-weight: bold;padding:0px;margin:0px" >{{ $totalpaymentamount }}</h6>
                     </td>
-                   
-                  
+
+
                 </tr>
             </t-footer>
          </table>
@@ -250,17 +250,19 @@
            </thead>
            <tbody>
             <tr class="text-center">
-               <?php 
-                   $netamount = $totalpurchaseamount - $totaldis; // Added missing semicolon
-                   $balance = $netamount - $totalpaymentamount; // Added missing semicolon
-               ?>
-               <th>{{ $netamount }}</th>
-               <th>{{ $totalpaymentamount }}</th>
-               <th>{{ $balance }}</th>
-               <th>{{ $balance > 0 ? 'Due' : 'Paid' }}</th>
-           </tr>
+                <?php
+                    $netamount = $totalpurchaseamount - $totaldis;
+                    $balance = $netamount - $totalpaymentamount;
+                    
+                ?>
+                <th>{{ number_format($netamount, 2) }}</th>
+                <th>{{ number_format($totalpaymentamount, 2) }}</th>
+                <th>{{ number_format($balance, 2) }}</th>
+                <th>{{ $balance > 0 ? 'Due' : 'Paid' }}</th>
+            </tr>
+
            </tbody>
-          
+
         </table>
      </div>
    </main>
@@ -271,9 +273,9 @@
          <strong>NOTE :</strong> This is computer generated Ledger and does not require physical signature.
       </p>
 
-      <div class="btn-group btn-group-sm d-print-none"> 
+      <div class="btn-group btn-group-sm d-print-none">
          <a href="javascript:window.print()" class="btn btn-light border text-black-50 shadow-none">
-            <i class="fa fa-print"></i> Print & Download</a> 
+            <i class="fa fa-print"></i> Print & Download</a>
       </div>
    </footer>
 </div>

@@ -161,18 +161,19 @@ class invoiceController extends Controller
 
         $invoice = invoice::with('customerName','invdetail')->where('id',$id)->first();
 
-        $blackstone = stockValue::where('material_id',1)->first();
-        $mixedbuilder = stockValue::where('material_id',2)->first();
-        $dubai = stockValue::where('material_id',3)->first();
-        $mm10 = stockValue::where('material_id',4)->first();
-        $pccCement = stockValue::where('material_id',5)->first();
-        $opcCement = stockValue::where('material_id',6)->first();
-        $begCement = stockValue::where('material_id',7)->first();
-        $sand = stockValue::where('material_id',8)->first();
-        $admixer = stockValue::where('material_id',9)->first();
-        $bricks = stockValue::where('material_id',10)->first();
+
+        $blackstone = stockValue::where('material_id',12)->first();
+        $mixedbuilder = stockValue::where('material_id',13)->first();
+        $dubai = stockValue::where('material_id',14)->first();
+        $mm10 = stockValue::where('material_id',11)->first();
+        $Cement = stockValue::where('material_id',16)->first();
+        // $opcCement = stockValue::where('material_id',6)->first();
+        // $begCement = stockValue::where('material_id',7)->first();
+        $sand = stockValue::where('material_id',17)->first();
+        $admixer = stockValue::where('material_id',18)->first();
+        $bricks = stockValue::where('material_id',15)->first();
         // dd($ddd);
-        return view('layouts.pages.consumption.consum_add',compact('invoice','blackstone','mixedbuilder','dubai','mm10','pccCement','opcCement','begCement','sand','admixer','bricks'));
+        return view('layouts.pages.consumption.consum_add',compact('invoice','blackstone','mixedbuilder','dubai','mm10','Cement','sand','admixer','bricks'));
     }
 
 
@@ -208,6 +209,7 @@ class invoiceController extends Controller
 
     public function storeConsumption(Request $request)
     {
+       
         // Check if quantity field is null
         if ($request->quantity == null) {
             $notification = [
@@ -232,7 +234,7 @@ class invoiceController extends Controller
             $consumption->mixed_builder = $request->mixed_builder[$i];
             $consumption->dubai = $request->dubai[$i];
             $consumption->mm10 = $request->mm10[$i];
-            $consumption->pcc_cement = $request->pcc_cement[$i];
+            $consumption->pcc_cement = $request->cement[$i];
             // $consumption->opc_cement = $request->opc_cement[$i];
             // $consumption->beg_cement = $request->beg_cement[$i];
             $consumption->sand = $request->sand[$i];
@@ -241,16 +243,16 @@ class invoiceController extends Controller
             $consumption->save();
 
             // Update product quantities
-            $this->updateProductQuantity(1, $request->black_stone[$i]);
-            $this->updateProductQuantity(2, $request->mixed_builder[$i]);
-            $this->updateProductQuantity(3, $request->dubai[$i]);
-            $this->updateProductQuantity(4, $request->mm10[$i]);
-            $this->updateProductQuantity(5, $request->pcc_cement[$i]);
+            $this->updateProductQuantity(12, $request->black_stone[$i]);
+            $this->updateProductQuantity(13, $request->mixed_builder[$i]);
+            $this->updateProductQuantity(14, $request->dubai[$i]);
+            $this->updateProductQuantity(11, $request->mm10[$i]);
+            $this->updateProductQuantity(16, $request->cement[$i]);
             // $this->updateProductQuantity(6, $request->opc_cement[$i]);
             // $this->updateProductQuantity(7, $request->beg_cement[$i]);
-            $this->updateProductQuantity(8, $request->sand[$i]);
-            $this->updateProductQuantity(9, $request->admixer[$i]);
-            $this->updateProductQuantity(10, $request->bricks[$i]);
+            $this->updateProductQuantity(17, $request->sand[$i]);
+            $this->updateProductQuantity(18, $request->admixer[$i]);
+            $this->updateProductQuantity(15, $request->bricks[$i]);
         }
 
         // Return success notification

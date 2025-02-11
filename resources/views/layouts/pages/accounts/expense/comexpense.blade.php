@@ -39,12 +39,12 @@
                                         <span class="badge light badge-success">Approved</span>
                                         @endif
                                     </td>
-                                    
+
                                     <td>
                                         @if($data->is_approve == 0)
                                         <button type="button" class="btn btn-sm btn-success p-1 px-2 edit" id="Edit" data-id="{{ $data->id }}" >Edit</button>
                                         @endif
-                                        
+
                                         <button type="button" class="btn btn-sm btn-danger p-1 px-2 view" id="view" data-id="{{ $data->id }}" >View</button>
                                     </td>
                                 </tr>
@@ -89,7 +89,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group row">
                                     <label for="" class="col-md-4"> Payment Reason</label>
@@ -101,7 +101,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                           <div class="row" >
                             <div class="col-md-12">
@@ -113,7 +113,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-12">
                               <div class="form-group row">
@@ -170,7 +170,7 @@
                               <div class="form-group row">
                                 <label for="" class="col-md-4"> Check Number</label>
                                 <div class="col-md-8">
-                                  <input type="text" name="check_num" readonly id="checkNumber" class="form-control" placeholder="Enter Check Number">
+                                  <input type="text" name="check_num"  class="form-control" placeholder="Enter Check Number">
                                 </div>
                               </div>
                             </div>
@@ -251,7 +251,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group row">
                                         <label for="" class="col-md-5"> Payment Reason</label>
@@ -263,7 +263,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="row">
                                 <div class="col-md-12">
                                   <div class="form-group row">
@@ -323,7 +323,7 @@
                                   <div class="form-group row">
                                     <label for="" class="col-md-5"> Check Number</label>
                                     <div class="col-md-7">
-                                      <input type="text" name="" readonly id="checkno" class="form-control" placeholder="Enter Check Number">
+                                      <input type="text" name="check_num"  id="checkno" class="form-control" placeholder="Enter Check Number">
                                     </div>
                                   </div>
                                 </div>
@@ -407,7 +407,7 @@
                             </div>
 
 
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group row">
                                         <label for="" class="col-md-5"> Payment Reason</label>
@@ -419,7 +419,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="row">
                                 <div class="col-md-12">
                                 <div class="form-group row">
@@ -540,13 +540,13 @@
 
      if (payMode.value === 'Bank') {
        checkNumberRow.style.display = 'block';
-       checkDateRow.style.display = 'block';
+
        bankNameRow.style.display = 'block';
        bankaccountidrow.style.display = 'block';
 
      } else {
        checkNumberRow.style.display = 'none';
-       checkDateRow.style.display = 'none';
+
        bankNameRow.style.display = 'none';
        bankaccountidrow.style.display = 'none';
 
@@ -574,13 +574,13 @@ $(document).ready(function () {
 
         if (payMode === "Bank") {
             checkNumberRow.show();
-            checkDateRow.show();
+
             bankNameRow.show();
             bankaccrowedit.show();
             cashaccrowedit.hide();
         } else {
             checkNumberRow.hide();
-            checkDateRow.hide();
+
             bankNameRow.hide();
             bankaccrowedit.hide();
             cashaccrowedit.show();
@@ -589,7 +589,6 @@ $(document).ready(function () {
 
     $(".edit").click(function () {
     var Id = $(this).data('id');
-    alert(Id);
     $.ajax({
         url: "{{ route('expense_payment_edit') }}",
         method: 'GET',
@@ -695,11 +694,11 @@ $(document).ready(function () {
 
         if (payMode === "Bank") {
             checkNumberRow.show();
-            checkDateRow.show();
+
             bankNameView.show();
         } else {
             checkNumberRow.hide();
-            checkDateRow.hide();
+
             bankNameView.hide();
         }
     }

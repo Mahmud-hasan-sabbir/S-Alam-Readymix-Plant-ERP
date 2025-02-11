@@ -200,6 +200,7 @@ $(document).on('change', '#categoryIdedit', function() {
             var unitId = $('#unitId').val();
             var unitSelected = $('#unitId option:selected').text();
 
+
             if (supplierId && categoryId && materialId && storeId && unitId) {
                 var source = $("#document-template").html();
                 var template = Handlebars.compile(source);
@@ -261,20 +262,28 @@ $(document).on('change', '#categoryIdedit', function() {
 
     $(document).ready(function() {
     $(document).on('input', '.unit_price, .quantity, .truckfee', function() {
-        var productName = $(this).closest("tr").find("td").eq(0).text().trim();
+        var unitName = $(this).closest("tr").find("td").eq(3).text().trim(); // Unit Name ধরার জন্য eq(3)
         var amount = $(this).closest("tr").find("input.unit_price").val();
         var qty = $(this).closest("tr").find("input.quantity").val();
         // var qtyconton = qty / 1000; // Convert quantity to tons
         var truckfee = $(this).closest("tr").find("input.truckfee").val();
         // var subtotal = (qtyconton * amount) - truckfee; // Calculate subtotal
         var subtotal;
-            if(productName == 'Bricks')
-            {
-                subtotal = (qty * amount) - truckfee;
-            }else{
-                var qtyconton = qty / 1000; // Convert quantity to tons
-                subtotal = (qtyconton * amount) - truckfee;
-            }
+
+        if(['Kg', 'Pcs', 'Beg', 'Litter'].includes(unitName)) {
+            subtotal = (qty * amount) - truckfee;
+        } else {
+            var qtyconton = qty / 1000; // Convert quantity to tons
+            subtotal = (qtyconton * amount) - truckfee;
+        }
+
+            // if(unitName == 'Bricks')
+            // {
+            //     subtotal = (qty * amount) - truckfee;
+            // }else{
+            //     var qtyconton = qty / 1000; // Convert quantity to tons
+            //     subtotal = (qtyconton * amount) - truckfee;
+            // }
 
         $(this).closest("tr").find("input.subtotal").val(subtotal.toFixed(2)); // Update subtotal
         totalAmountPrice(); // Update total and net amount

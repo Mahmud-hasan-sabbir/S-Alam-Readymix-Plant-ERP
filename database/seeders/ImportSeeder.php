@@ -159,7 +159,27 @@ class ImportSeeder extends Seeder
             'status'=>'1',
         ]);
         unit::create([
-            'name'=>'KG',
+            'name'=>'Ton',
+            'description'=>'test',
+            'status'=>'1',
+        ]);
+        unit::create([
+            'name'=>'Kg',
+            'description'=>'test',
+            'status'=>'1',
+        ]);
+        unit::create([
+            'name'=>'Pcs',
+            'description'=>'test',
+            'status'=>'1',
+        ]);
+        unit::create([
+            'name'=>'Bag',
+            'description'=>'test',
+            'status'=>'1',
+        ]);
+        unit::create([
+            'name'=>'Litter',
             'description'=>'test',
             'status'=>'1',
         ]);

@@ -315,7 +315,7 @@
     document.getElementById('totalpayment').innerHTML = totalpaymentamount;
     document.getElementById('totalbil').innerHTML = netamount;
     document.getElementById('paidamount').innerHTML = totalpaymentamount;
-    document.getElementById('balance').innerHTML = balance;
+    document.getElementById('balance').innerHTML = balance.toFixed(2);
     document.getElementById('paymentstatus').innerHTML = paymentstatus;
 
 </script>

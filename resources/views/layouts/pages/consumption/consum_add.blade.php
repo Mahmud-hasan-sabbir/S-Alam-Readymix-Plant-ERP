@@ -27,7 +27,7 @@
                         <div class="col-md-4">
                             <table class="table table-striped table-bordered table-sm mb-3">
                                 <tr class="text-center">
-                                    <td>Date: {{ now()->format('d-m-Y') }}</td>
+                                    <td>Date: {{ $invoice->date }}</td>
                                 </tr>
                             </table>
                         </div>
@@ -83,7 +83,7 @@
                                         <input type="text" class="form-control text-right" readonly name="Black Stone[]" id="initial-BlackStone" value="{{ $blackstone->cur_qty ?? 0 }}">
                                     </div>
                                 </td>
-                            
+
                                 <td>
                                     <div class="input-group">
                                         <input type="text" class="form-control text-right" readonly name="black_stone[]" id="initial-Dubai" value="{{ $dubai->cur_qty ?? 0 }}">
@@ -98,10 +98,10 @@
 
                                 <td>
                                     <div class="input-group">
-                                        <input type="text" class="form-control text-right" readonly name="dubai_stone[]" id="initial-pccCement" value="{{ $pccCement->cur_qty ?? 0 }}">
+                                        <input type="text" class="form-control text-right" readonly name="dubai_stone[]" id="initial-pccCement" value="{{ $Cement->cur_qty ?? 0 }}">
                                     </div>
                                 </td>
-                                
+
                                 <td >
                                     <div class="input-group">
                                         <input type="text" class="form-control text-right" readonly name="bricks[]" id="initial-bricks" value="{{ $bricks->cur_qty ?? 0 }}">
@@ -140,7 +140,7 @@
                                 <td>
                                     <input type="text" class="form-control check-value" name="black_stone[]" data-initial="initial-BlackStone" autocomplete="off">
                                 </td>
-                                
+
                                 <td>
                                     <input type="text" class="form-control check-value" name="dubai[]" data-initial="initial-Dubai" autocomplete="off">
                                 </td>
@@ -148,11 +148,11 @@
                                 <td>
                                     <input type="text" class="form-control check-value" name="sand[]" data-initial="initial-sand" autocomplete="off" required>
                                 </td>
-                                
+
                                 <td>
-                                    <input type="text" class="form-control check-value" name="pcc_cement[]" data-initial="initial-pccCement" autocomplete="off" required>
+                                    <input type="text" class="form-control check-value" name="cement[]" data-initial="initial-pccCement" autocomplete="off" required>
                                 </td>
-                                
+
                                 <td>
                                     <input type="text" class="form-control check-value" name="bricks[]" data-initial="initial-bricks" autocomplete="off">
                                 </td>
@@ -181,12 +181,12 @@
                             </tr>
                         </thead>
 
-                       
+
                     </table>
                 </div> -->
 
 
-                
+
             </div> <!-- End Card Body -->
         </div>
     </div>
