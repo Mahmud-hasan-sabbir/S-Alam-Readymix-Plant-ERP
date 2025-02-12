@@ -74,13 +74,7 @@
 
                                     </td>
                                     <td style="text-align: center;font-weight: bold;">
-                                        @if($totaldue < 0)
-                                        <span class="badge light badge-primary">
-                                            {{ number_format($totaldue) }}
-                                        </span>
-                                    @else
-                                        0
-                                    @endif
+                                        {{ number_format( $negativeTotal) }}
                                     </td>
 
                                 </tr>

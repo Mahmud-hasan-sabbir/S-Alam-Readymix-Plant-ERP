@@ -23,18 +23,20 @@
 
     </td>
     <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
-
-    </td>
-
-    <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-
-    </td>
-    <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
         <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;">Total Amount : </h6>
     </td>
-    <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
-        <h6 style="font-weight: bold;padding:0px;margin:0px" id="" >
+
+    <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+        <h6 style="font-weight: bold;padding:0px;margin:0px" id="formattedTotalqty" >
         </h6>
+    </td>
+    <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
+        <h6 style="font-weight: bold;padding:0px;margin:0px" id="formattedTotalcft" >
+        </h6>
+
+    </td>
+    <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
+
     </td>
     <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
         <h6 style="font-weight: bold;padding:0px;margin:0px" id="debitSumDisplay" >
@@ -46,7 +48,11 @@
 </t-footer>
 
 <script>
+    var formattedTotalqty = '{{ $formattedTotalqty }}';
+    var formattedTotalcft = '{{ $formattedTotalcft }}';
     var formattedTotalamount = '{{ $formattedTotalamount }}';
+    document.getElementById('formattedTotalqty').innerHTML = formattedTotalqty;
+    document.getElementById('formattedTotalcft').innerHTML = formattedTotalcft;
     document.getElementById('debitSumDisplay').innerHTML = formattedTotalamount;
 </script>
 

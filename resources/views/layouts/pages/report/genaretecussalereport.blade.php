@@ -17,19 +17,19 @@
    <link rel="stylesheet" type="text/css" href="{{ asset('/public/bootstrap.min.css') }}">
    <link rel="stylesheet" type="text/css" href="{{ asset('/public/all.min.css') }}">
    <link rel="stylesheet" type="text/css" href="{{ asset('/public/stylesheet.css') }}">
-   
+
 </head>
 
 <body>
 <!-- Container -->
-<div class="container-fluid invoice-container"> 
+<div class="container-fluid invoice-container">
    <!-- Header -->
    <header>
       <div class="row align-items-center gy-3" style="margin-top: -55px">
-         <div class="col-sm-7 text-center text-sm-start"> 
+         <div class="col-sm-7 text-center text-sm-start">
             <img id="logo" src="{{ asset('/public/logo.png') }}" title="Koice" alt="Koice" width="100px" />
          </div>
-         
+
          <div class="col-sm-11 text-center text-sm-end" style="margin-top: -44px;margin-left:57px">
             <h4 class="text-center" style="font-weight: 700;">S. Alam Readymix Concrete Plant</h4>
             <h6 class="text-center" style="font-weight: 500;">All Sales Materials</h6>
@@ -40,7 +40,7 @@
    <!-- Main Content -->
 
    <main>
-    <div class="row">     
+    <div class="row">
         <div class="text-center">
            <p style="font-size: 22px; font-weight: bold; text-decoration: underline; margin-bottom: 0;">Purchase Material</p>
            <p>Date: {{ $formdate }} to {{ $enddate }}</p>
@@ -58,7 +58,7 @@
                 <th>Qty</th>
                 <th>Qty (cft)</th>
                 <th>Unit Price</th>
-                <th>Total</th>			
+                <th>Total</th>
                </tr>
             </thead>
 
@@ -75,17 +75,20 @@
                     <td scope="col">{{ $item->sub_total}}</td>
                 </tr>
                 @endforeach
-              
-               <tr class="bg-light">              
-                  <th colspan="7" class="text-end">Total Amount =</th>
+
+               <tr class="bg-light">
+                  <th colspan="4" class="text-center">Total Amount =  </th>
+                  <th>{{ $formattedTotalqty }}</th>
+                  <th>{{ $formattedTotalcft }}</th>
+                  <th></th>
                   <th>{{ $formattedTotalamount }}</th>
                </tr>
-               
+
             </tbody>
    	  </table>
    	</div>
 
-      
+
    </main>
 
   <!-- Footer -->
@@ -94,12 +97,12 @@
          <strong>NOTE :</strong> This is computer generated receipt and does not require physical signature.
       </p>
 
-      <div class="btn-group btn-group-sm d-print-none"> 
+      <div class="btn-group btn-group-sm d-print-none">
          <a href="javascript:window.print()" class="btn btn-light border text-black-50 shadow-none">
-            <i class="fa fa-print"></i> Print & Download</a> 
+            <i class="fa fa-print"></i> Print & Download</a>
       </div>
    </footer>
 </div>
-   
+
 </body>
 </html>

@@ -11,9 +11,7 @@
         <th>Balack Stone</th>
         <th>Dubai</th>
         <th>Sand</th>
-        <th>pcc_cement</th>
-        <th>opc_cement</th>
-        <th>beg_cement</th>
+        <th>Cement</th>
         <th>Bricks</th>
     </tr>
 
@@ -32,8 +30,6 @@
     <td scope="col">{{ $item->dubai}}</td>
     <td scope="col">{{ $item->sand}}</td>
     <td scope="col">{{ $item->pcc_cement}}</td>
-    <td scope="col">{{ $item->opc_cement}}</td>
-    <td scope="col">{{ $item->beg_cement}}</td>
     <td scope="col">{{ $item->bricks}}</td>
 </tr>
 @endforeach
@@ -70,12 +66,8 @@
     <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
         <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;" id="topcccement"></h6>
     </td>
-    <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid;padding-top:6px;padding-bottom:6px">
-        <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;" id="toopccement"></h6>
-    </td>
-    <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
-        <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;" id="tobegcement"></h6>
-    </td>
+
+
     <td style="border-top:1px solid; border-left:0px solid; border-bottom:1px solid">
         <h6 style="font-weight: bold;padding:0px;margin:0px;text-align:center;" id="tobricks"></h6>
     </td>
@@ -89,9 +81,7 @@
     var mixed_builder = {{ $mixed_builder }};
     var dubai = {{ $dubai }};
     var mm10 = {{ $mm10 }};
-    var pcc_cement = {{ $pcc_cement }};
-    var opc_cement = {{ $opc_cement }};
-    var beg_cement = {{ $beg_cement }};
+    var cement = {{ $cement }};
     var sand = {{ $sand }};
     var admixer = {{ $admixer }};
     var bricks = {{ $bricks }};
@@ -104,9 +94,7 @@
     document.getElementById('toblackstor').innerHTML = totalblackstone ? totalblackstone : '';
     document.getElementById('todubai').innerHTML = dubai ? dubai : '';
     document.getElementById('tosand').innerHTML = sand ? sand : '';
-    document.getElementById('topcccement').innerHTML = pcc_cement ? pcc_cement : '';
-    document.getElementById('toopccement').innerHTML = opc_cement ? opc_cement : '';
-    document.getElementById('tobegcement').innerHTML = beg_cement ? beg_cement : '';
+    document.getElementById('topcccement').innerHTML = cement ? cement : '';
     document.getElementById('tobricks').innerHTML = bricks ? bricks : '';
 </script>
 

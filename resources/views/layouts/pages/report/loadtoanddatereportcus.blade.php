@@ -4,7 +4,7 @@
 <tr>
     <td scope="col">{{ $loop->iteration }}</td>
     <td scope="col">{{ $item->date }}</td>
-    <td scope="col">{{ $item->Address}}</td>
+    <td scope="col">{{ $item->location}}</td>
     <td scope="col">{{ $item->grade}}</td>
     <td scope="col">{{ $item->qty_m3}}</td>
     <td scope="col">{{ $item->qty_cft}}</td>
@@ -16,7 +16,7 @@
 
 <t-footer style="display: none">
 <tr class="addr" >
-    
+
     <td style="border-top:1px solid; border-right:0px solid; border-bottom:1px solid">
 
     </td>
@@ -120,7 +120,7 @@
     <td>{{ $item->pay_amount }}</td>
     <td>{{ $item->pay_mode }}</td>
     <td></td>
-    
+
 </tr>
 @endforeach
 
@@ -251,7 +251,7 @@
 
     // Calculate balance
     var balance = totalAmountNumber - totalpaymentamount;
-    
+
     // Determine payment status
     var paymentstatus = balance > 0 ? 'Due' : 'Paid';
 
@@ -262,6 +262,6 @@
     document.getElementById('totalsub').innerHTML = formattedTotalamount;
     document.getElementById('totalbil').innerHTML = formattedTotalamount;
     document.getElementById('paidamount').innerHTML = totalpaymentamount;
-    document.getElementById('balance').innerHTML = balance.toFixed(2); 
+    document.getElementById('balance').innerHTML = balance.toFixed(2);
     document.getElementById('paymentstatus').innerHTML = paymentstatus;
 </script>

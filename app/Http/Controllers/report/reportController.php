@@ -362,17 +362,29 @@ class reportController extends Controller
         ->groupBy('Member_code')
         ->get();
 
+        $negativeTotal = $totalSupplierReport
+        ->map(function ($item) {
+            return $item->total_debit - $item->total_credit;
+        })
+        ->filter(function ($value) {
+            return $value < 0;
+        })
+        ->sum();
+
+
+
+
 
 
         $totalsupdebit =  $totalSupplierReport->sum('total_debit');
         $totalsupcredit =  $totalSupplierReport->sum('total_credit');
         $totaldue = $totalsupdebit -  $totalsupcredit;
-        $advanced = $totalsupcredit -  $totalsupdebit;
-        
 
 
 
-        return view('layouts.pages.report.totalSupplierReport', compact('totalSupplierReport','totalsupdebit','totalsupcredit','totaldue'));
+
+
+        return view('layouts.pages.report.totalSupplierReport', compact('totalSupplierReport','totalsupdebit','totalsupcredit','totaldue','negativeTotal'));
     }
 
 
@@ -398,6 +410,15 @@ class reportController extends Controller
             ];
         });
 
+
+        $negativeDueTotal = $totalcustomerReport
+        ->map(fn($report) => floatval($report['total_credit']) - floatval($report['total_debit']))
+        ->filter(fn($dueAmount) => $dueAmount < 0) // শুধুমাত্র 0 থেকে ছোট মান রাখবে
+        ->sum();
+
+
+
+
         $totalcusdebit =  $totalcustomerReport->sum('total_debit');
         $totalsupcredit =  $totalcustomerReport->sum('total_credit');
         $totaldue = $totalsupcredit -  $totalcusdebit;
@@ -407,6 +428,7 @@ class reportController extends Controller
             'totalreceived' => $totalcusdebit,
             'totalsales' => $totalsupcredit,
             'totaldue' => $totaldue,
+            'negativeDueTotal' => $negativeDueTotal,
         ]);
     }
 
@@ -642,11 +664,12 @@ class reportController extends Controller
             ->join('invoice_details', 'invoices.id', '=', 'invoice_details.inv_id')
             ->join('grades', 'grades.id', '=', 'invoice_details.grade_id')
             ->join('saller_information', 'invoices.cus_id', '=', 'saller_information.id')
-            ->select('invoices.date', 'invoice_details.qty_m3','invoice_details.qty_cft','invoice_details.unit_price_cft','invoice_details.sub_total', 'saller_information.Address','grades.name as grade')
+            ->select('invoices.date','invoice_details.location', 'invoice_details.qty_m3','invoice_details.qty_cft','invoice_details.unit_price_cft','invoice_details.sub_total', 'saller_information.Address','grades.name as grade')
             ->whereDate('invoices.date', '>=', $request->startDate)
             ->whereDate('invoices.date', '<=', $request->endDate)
             ->where('cus_id', $request->customerId)
             ->get();
+
 
 
             $payments = DB::table('customer_payments')
@@ -760,6 +783,23 @@ class reportController extends Controller
             ->whereDate('invoices.date', '<=', $request->edate)
             ->get();
 
+
+            $totalsumqty = $data->sum(function($item) {
+                return floatval(str_replace(',', '', $item->qty_m3));
+            });
+
+            $formattedTotalqty = number_format($totalsumqty, 2, '.', ',');
+
+
+
+            $totalsumcft = $data->sum(function($item) {
+                return floatval(str_replace(',', '', $item->qty_cft));
+            });
+
+            $formattedTotalcft = number_format($totalsumcft, 2, '.', ',');
+
+
+
             $totalsum = $data->sum(function($item) {
                 return floatval(str_replace(',', '', $item->sub_total));
             });
@@ -769,7 +809,7 @@ class reportController extends Controller
 
 
 
-        return view('layouts.pages.report.loadcustomerwisesalereport',compact('data','formattedTotalamount'));
+        return view('layouts.pages.report.loadcustomerwisesalereport',compact('data','formattedTotalamount','formattedTotalqty','formattedTotalcft'));
     }
 
     public function generateSaleInvoice(Request $request)
@@ -783,6 +823,21 @@ class reportController extends Controller
             ->whereDate('invoices.date', '<=', $request->edate)
             ->get();
 
+            $totalsumqty = $data->sum(function($item) {
+                return floatval(str_replace(',', '', $item->qty_m3));
+            });
+
+            $formattedTotalqty = number_format($totalsumqty, 2, '.', ',');
+
+
+
+            $totalsumcft = $data->sum(function($item) {
+                return floatval(str_replace(',', '', $item->qty_cft));
+            });
+
+            $formattedTotalcft = number_format($totalsumcft, 2, '.', ',');
+
+
             $totalsum = $data->sum(function($item) {
                 return floatval(str_replace(',', '', $item->sub_total));
             });
@@ -792,7 +847,7 @@ class reportController extends Controller
             $formdate = Carbon::parse($request->fdate)->format('m/d/Y');
             $enddate = Carbon::parse($request->edate)->format('m/d/Y');
 
-        return view('layouts.pages.report.genaretecussalereport', compact('data','formattedTotalamount','formdate','enddate'));
+        return view('layouts.pages.report.genaretecussalereport', compact('data','formattedTotalamount','formdate','enddate','formattedTotalqty','formattedTotalcft'));
 
     }
 
@@ -970,14 +1025,14 @@ class reportController extends Controller
             $mixed_builder = $consumptions->sum('mixed_builder');
             $dubai = $consumptions->sum('dubai');
             $mm10 = $consumptions->sum('mm10');
-            $pcc_cement = $consumptions->sum('pcc_cement');
-            $opc_cement = $consumptions->sum('opc_cement');
-            $beg_cement = $consumptions->sum('beg_cement');
+            $cement = $consumptions->sum('pcc_cement');
+            // $opc_cement = $consumptions->sum('opc_cement');
+            // $beg_cement = $consumptions->sum('beg_cement');
             $sand = $consumptions->sum('sand');
             $admixer = $consumptions->sum('admixer');
             $bricks = $consumptions->sum('bricks');
 
-        return view('layouts.pages.report.loadconsumptionreport', compact('consumptions','totalqty','totalblackstone','mixed_builder','dubai','mm10','pcc_cement','opc_cement','beg_cement','sand','admixer','bricks'));
+        return view('layouts.pages.report.loadconsumptionreport', compact('consumptions','totalqty','totalblackstone','mixed_builder','dubai','mm10','cement','sand','admixer','bricks'));
     }
 
     public function getTotalconsumptionInvoice(Request $request)
@@ -992,9 +1047,7 @@ class reportController extends Controller
             $mixed_builder = $consumptions->sum('mixed_builder');
             $dubai = $consumptions->sum('dubai');
             $mm10 = $consumptions->sum('mm10');
-            $pcc_cement = $consumptions->sum('pcc_cement');
-            $opc_cement = $consumptions->sum('opc_cement');
-            $beg_cement = $consumptions->sum('beg_cement');
+            $cement = $consumptions->sum('pcc_cement');
             $sand = $consumptions->sum('sand');
             $admixer = $consumptions->sum('admixer');
             $bricks = $consumptions->sum('bricks');
@@ -1002,7 +1055,7 @@ class reportController extends Controller
             $startdate = $request->start_date;
             $enddate = $request->end_date;
 
-        return view('layouts.pages.report.consumptionprint', compact('consumptions','totalqty','totalblackstone','mixed_builder','dubai','mm10','pcc_cement','opc_cement','beg_cement','sand','admixer','bricks','startdate','enddate'));
+        return view('layouts.pages.report.consumptionprint', compact('consumptions','totalqty','totalblackstone','mixed_builder','dubai','mm10','cement','sand','admixer','bricks','startdate','enddate'));
     }
 
 
