@@ -44,7 +44,7 @@
                                         </td>
                                         <!-- <td>{{ $item->pay_mode }}</td> -->
                                         <td>
-                                        
+
 
                                         @if($item->status == 0)
                                             <button type="button" class="btn btn-primary light display-inline" id="edit_data" data-id="{{ $item->id }}" title="Edit">
@@ -52,12 +52,12 @@
                                             </button>
                                         @endif
 
-                                                
-                                                
+
+
                                     <button type="button"  class="btn btn-success light" id="view_data"  data-id="{{ $item->id }}">
                                         <i class="fa-regular fa-eye"></i>
                                     </button>
-                                           
+
 
                                         </td>
 
@@ -103,7 +103,7 @@
                                 <div class="row">
                                     <label class="col-md-5 col-form-label">Current Salary : </label>
                                     <div class="col-md-7">
-                                        <input type="number" name="current_salary" readonly class="form-control" id="currentSalary">
+                             <input type="number" name="current_salary" readonly class="form-control" id="currentSalary">
                                     </div>
                                 </div>
                             </div>
@@ -239,9 +239,9 @@
                         <div class="row mt-2">
                             <div class="col-md-6">
                                 <div class="row">
-                                    <label class="col-md-5 col-form-label" for="per_number"> Remarks :</label>
+                                    <label class="col-md-5 col-form-label" for="per_number"> Total paid amount :</label>
                                     <div class="col-md-7">
-                                        <textarea name="remarks" id="remarks" cols="30" rows="2" class="form-control"></textarea>
+                                        <input type="text" class="form-control" readonly id="totalPaidAmount">
                                     </div>
                                 </div>
                             </div>
@@ -250,6 +250,16 @@
                                     <label class="col-md-5 col-form-label" for="per_number"> Year</label>
                                     <div class="col-md-7">
                                         <input type="text" id="year" required class="form-control" readonly value="{{ date('Y') }}" name="year">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <label class="col-md-3 col-form-label" for="per_number"> Remarks :</label>
+                                    <div class="col-md-9">
+                                        <textarea name="remarks" id="remarks" class="form-control" rows="3" style="margin-left:-30px;width:585px"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -554,6 +564,17 @@ $(document).on('change', '#bank_name', function() {
         });
     });
 
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#paidamount").on("input", function () {
+            var advancedSalary = parseFloat($("#advancedSalary").val()) || 0;
+            var paidSalary = parseFloat($(this).val()) || 0;
+            var totalAmount = advancedSalary + paidSalary;
+            $("#totalPaidAmount").val(totalAmount); 
+        });
+    });
 </script>
 
 

@@ -9,7 +9,7 @@
                      Store Wise Report
                     </h4>
                     <div>
-
+                        <button id="print" class="btn btn-sm btn-success"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Print</button>
                         <a href="" class="btn btn-sm btn-primary"><i class="fa fa-reply"></i><span class="btn-icon-add"></span>Back</a>
                     </div>
 
@@ -93,6 +93,13 @@
            }
        });
    });
+
+
+   $(document).on('click', '#print', function(){
+    var storeId = $('#storeId').val();
+  
+        window.location.href = '{{ route('print_store_wise') }}' + '?storeId=' + storeId;
+    });
 </script>
 
 

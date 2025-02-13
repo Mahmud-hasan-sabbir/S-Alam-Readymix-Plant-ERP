@@ -165,6 +165,16 @@
                               </div>
                             </div>
                           </div>
+                          <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label for="" class="col-md-4">Discount Amount</label>
+                                    <div class="col-md-8">
+                                        <input type="number" name="dis_amount"  id="discount_amount" class="form-control" placeholder="Enter discount Amount">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row">
                             <div class="col-md-12">
@@ -651,7 +661,7 @@ $(document).ready(function () {
             bankNameView.show();
         } else {
             checkNumberRow.hide();
-           
+
             bankNameView.hide();
         }
     }

@@ -24,6 +24,7 @@ class customerPayment extends Model
         'remarks',
         'is_approve',
         'user_id',
+        'discount_amount',
     ];
 
     public function customerName()

@@ -32,7 +32,8 @@ class reportController extends Controller
 {
     public function supplierWiseReport()
     {
-        $allSallerName = SallerInformation::where('category',1)->get();
+        $allSallerName = SallerInformation::where('category',1)->where('Status','Active')->get();
+
         return view('layouts.pages.report.supplier_wise_report',compact('allSallerName'));
     }
 
@@ -52,7 +53,7 @@ class reportController extends Controller
 
     public function customerWiseReport()
     {
-        $allSallerName = SallerInformation::where('category',2)->get();
+        $allSallerName = SallerInformation::where('category',2)->where('Status','Active')->get();
         return view('layouts.pages.report.customer_wise_report',compact('allSallerName'));
     }
 
@@ -97,6 +98,15 @@ class reportController extends Controller
 
 
         return view('layouts.pages.report.get_store_wise_report', compact('getStoreReport','pursum','salesum'));
+    }
+
+    public function printStoreWise(Request $request)
+    {
+        $storeId = $request->storeId;
+        $getStoreReport = StockValue::with('material')->whereRaw("FIND_IN_SET(?, store_id)", [$storeId])->get();
+        $pursum = $getStoreReport->sum('pur_qty');
+        $salesum = $getStoreReport->sum('sale_qty');
+        return view('layouts.pages.report.print_store_wise',compact('getStoreReport','pursum','salesum'));
     }
 
     public function modeWiseReport()
@@ -355,7 +365,7 @@ class reportController extends Controller
     public function totalSupplierReport()
     {
 
-        $supplierIds = SallerInformation::where('Category', 1)->pluck('id');
+        $supplierIds = SallerInformation::where('Category', 1)->where('Status','Active')->pluck('id');
         $totalSupplierReport = transection::with('sallername')
         ->whereIn('Member_code', $supplierIds)
         ->select('Member_code', DB::raw('SUM(Debit) as total_debit'), DB::raw('SUM(Credit) as total_credit'))
@@ -390,7 +400,7 @@ class reportController extends Controller
 
     public function allCustomerReport()
     {
-        $customerIds = SallerInformation::where('Category', 2)->pluck('id');
+        $customerIds = SallerInformation::where('Category', 2)->where('Status','Active')->pluck('id');
         $transactions = transection::with('sallername')
             ->whereIn('Member_code', $customerIds)
             ->get();
@@ -496,7 +506,7 @@ class reportController extends Controller
 
     public function individualDateReportSupplier()
     {
-        $allSallerName = SallerInformation::where('category',1)->get();
+        $allSallerName = SallerInformation::where('category',1)->where('Status','Active')->get();
         return view('layouts.pages.report.individual_date_report_supplier',compact('allSallerName'));
     }
 
@@ -576,7 +586,7 @@ class reportController extends Controller
 
     public function toAndDateReport()
     {
-        $allSallerName = SallerInformation::where('category',1)->get();
+        $allSallerName = SallerInformation::where('category',1)->where('Status','Active')->get();
         return view('layouts.pages.report.to_and_date_report',compact('allSallerName'));
     }
 
@@ -614,7 +624,7 @@ class reportController extends Controller
 
     public function individualDateReportCus()
     {
-        $allSallerName = SallerInformation::where('category',2)->get();
+        $allSallerName = SallerInformation::where('category',2)->where('Status','Active')->get();
         return view('layouts.pages.report.individual_date_report_cus',compact('allSallerName'));
     }
 
@@ -653,7 +663,7 @@ class reportController extends Controller
 
     public function toAndDateReportCus()
     {
-        $allSallerName = SallerInformation::where('category',2)->get();
+        $allSallerName = SallerInformation::where('category',2)->where('Status','Active')->get();
         return view('layouts.pages.report.to_and_date_report_cus',compact('allSallerName'));
     }
 
@@ -854,7 +864,7 @@ class reportController extends Controller
 
     public function refundingReport()
     {
-        $allSallerName = SallerInformation::where('category',2)->get();
+        $allSallerName = SallerInformation::where('category',2)->where('Status','Active')->get();
         return view('layouts.pages.report.refundingreport',compact('allSallerName'));
     }
 
@@ -889,7 +899,7 @@ class reportController extends Controller
 
     public function dateWiseSupReport()
     {
-        $allSallerName = SallerInformation::where('category',1)->get();
+        $allSallerName = SallerInformation::where('category',1)->where('Status','Active')->get();
         return view('layouts.pages.report.datewisesupreport',compact('allSallerName'));
     }
 

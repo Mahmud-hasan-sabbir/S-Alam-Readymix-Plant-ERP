@@ -46,7 +46,7 @@
                                                     {{ basename($employeeEdit->nid) }}
                                                 @endif
                                             </div>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -58,6 +58,17 @@
                                         </label>
                                         <div class="col-md-7">
                                             <input class="input form-control" value="{{ $employeeEdit->mobile_no }}"  placeholder="Emergency-contact-number .." id="personnalNumber" type="tel" name="personalNumber" placeholder="" autocomplete="off"  aria-labelledby="InputLabel" aria-invalid aria-required="true"  tabindex="1" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-5">Status type </label>
+                                        <div class="col-md-7">
+                                            <select name="em_work_order" id="status" class="form-control">
+                                                <option value="Active" {{ $employeeEdit->work_order == 'Active' ? 'selected' : '' }}>Active</option>
+                                                <option value="Inactive" {{ $employeeEdit->work_order == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

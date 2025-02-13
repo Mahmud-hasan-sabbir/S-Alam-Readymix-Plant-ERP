@@ -83,6 +83,7 @@ Route::group(['middleware' => ['auth']], function(){
         Route::get('employee_view/{id}',[datasettingController::class,'employeeView'])->name('employee_view');
         Route::get('inactive_supplier',[datasettingController::class,'inactiveSupplier'])->name('inactive_supplier');
         Route::get('inactive_customer',[datasettingController::class,'inactiveCustomer'])->name('inactive_customer');
+        Route::get('inactive_employee',[datasettingController::class,'inactiveEmployee'])->name('inactive_employee');
 
 
         // category route
@@ -181,6 +182,7 @@ Route::group(['middleware' => ['auth']], function(){
           Route::get('/consumptionreport', [reportController::class, 'consumptionreport'])->name('consumptionreport');
           Route::get('/get_consumption_report', [reportController::class, 'getConsumptionReport'])->name('get_consumption_report');
           Route::get('/get_totalconsumption_invoice', [reportController::class, 'getTotalconsumptionInvoice'])->name('get_totalconsumption_invoice');
+          Route::get('/print_store_wise', [reportController::class, 'printStoreWise'])->name('print_store_wise');
 
 
           // Bank account Setup route

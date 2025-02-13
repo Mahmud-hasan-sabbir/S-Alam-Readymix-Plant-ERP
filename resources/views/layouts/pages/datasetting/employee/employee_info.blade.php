@@ -98,6 +98,18 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="" class="col-md-5">Status type </label>
+                                    <div class="col-md-7">
+                                        <select name="em_work_order" id="status" class="form-control">
+                                            <option value="Active">Active</option>
+                                            <option value="Inactive">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <div class="col-md-6">
                                 <div class="form-group row">

@@ -36,7 +36,7 @@
                                     <div class="form-group row">
                                         <label for="" class="col-md-5">NID </label>
                                         <div class="col-md-7">
-                                            
+
                                             <img src="{{ asset($employeeview->nid) }}" alt="" style="width: 40px;height:40px">
                                         </div>
                                     </div>
@@ -49,6 +49,17 @@
                                         </label>
                                         <div class="col-md-7">
                                             <input class="input form-control" readonly value="{{ $employeeview->mobile_no }}"  placeholder="Emergency-contact-number .." id="personnalNumber" type="tel" name="personalNumber" placeholder="" autocomplete="off"  aria-labelledby="InputLabel" aria-invalid aria-required="true"  tabindex="1" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label for="" class="col-md-5">Status type </label>
+                                        <div class="col-md-7">
+                                            <select name="em_work_order" @selected(true) disabled id="status" class="form-control">
+                                                <option value="Active" {{ $employeeview->work_order == 'Active' ? 'selected' : '' }}>Active</option>
+                                                <option value="Inactive" {{ $employeeview->work_order == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -117,7 +128,7 @@
                                     <div class="form-group row">
                                         <label for="" class="col-md-5">Image</label>
                                         <div class="col-md-7">
-                                           
+
                                             <img src="{{ asset($employeeview->image) }}" alt="" style="width: 40px;height:40px">
                                         </div>
                                     </div>

@@ -23,7 +23,7 @@ class datasettingController extends Controller
 
         $designation = Designation::all();
         $allInformation = SallerInformation::where('Category', $type)->where('Status','Active')->latest()->get();
-        $allemployee = SallerInformation::where('Category', $type)->latest()->get();
+        $allemployee = SallerInformation::where('Category', $type)->where('work_order','Active')->latest()->get();
 
 
 
@@ -144,7 +144,7 @@ class datasettingController extends Controller
             $saller->contact_person = $request->contact_person;
             $saller->mobile_no = $request->mobile_no;
             $saller->Email = $request->email;
-            $saller->Address = $request->site_location; 
+            $saller->Address = $request->site_location;
 
             // Handle file uploads
             $uploadedImages = self::uploadImages($request);
@@ -192,6 +192,7 @@ class datasettingController extends Controller
             $saller->Status = $request->employeeStatus;
             $saller->Gender = $request->gender;
             $saller->salary = $request->salary;
+            $saller->work_order = $request->em_work_order;
             $saller->Category = 3;
             $saller->user_id = Auth::user()->id;
             $saller->save();
@@ -360,7 +361,7 @@ class datasettingController extends Controller
     }
 
     public function updateEmployee(Request $request , $id)
-    { 
+    {
         try {
             $employeeupdate = SallerInformation::find($id);
             $employeeupdate->company_name = $request->name;
@@ -381,6 +382,7 @@ class datasettingController extends Controller
             $employeeupdate->Status = $request->employeeStatus;
             $employeeupdate->Gender = $request->gender;
             $employeeupdate->salary = $request->salary;
+            $employeeupdate->work_order = $request->em_work_order;
             $employeeupdate->Category = 3;
             $employeeupdate->user_id = Auth::user()->id;
             $employeeupdate->save();
@@ -396,7 +398,7 @@ class datasettingController extends Controller
 
 
 
-           
+
     }
 
 
@@ -646,6 +648,12 @@ class datasettingController extends Controller
             $inactivecustomer = SallerInformation::where('Category',2)->where('Status','Inactive')->latest()->get();
             return view('layouts.pages.datasetting.customer.inactive_customer',compact('inactivecustomer'));
       }
+
+        public function inactiveEmployee()
+        {
+                $inactiveemployee = SallerInformation::where('Category',3)->where('work_order','Inactive')->latest()->get();
+                return view('layouts.pages.datasetting.employee.inactive_employee',compact('inactiveemployee'));
+        }
 
 
 

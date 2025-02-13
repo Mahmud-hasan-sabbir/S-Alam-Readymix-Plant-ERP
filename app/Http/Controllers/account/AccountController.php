@@ -296,6 +296,7 @@ class AccountController extends Controller
         $paymentForcustomer->check_date = $request->check_date;
         $paymentForcustomer->pay_amount = $request->pay_amount;
         $paymentForcustomer->remarks = $request->remarks;
+        $paymentForcustomer->discount_amount = $request->dis_amount;
         $paymentForcustomer->is_approve = 0;
         $paymentForcustomer->user_id = Auth::user()->id;
         $paymentForcustomer->save();

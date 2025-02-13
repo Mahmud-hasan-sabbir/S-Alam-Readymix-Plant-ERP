@@ -103,7 +103,7 @@
                         <li><a href="{{ route('bank_info') }}">Manage Bank</a></li>
                     </ul>
                 </li> -->
-                
+
                 <li>
                     <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                         <i class="fa-solid fa-cart-shopping"></i>
@@ -114,14 +114,14 @@
                         <li><a href="{{ route('purchase_approve_list') }}">Approve Purchase </a></li>
                     </ul>
                 </li>
-                
+
                 <li>
                     <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                         <i class="fa-solid fa-truck"></i>
                         <span class="nav-text">Sales</span>
                     </a>
                     <ul aria-expanded="false">
-                        
+
                         <li><a href="{{ route('add_invoice') }}">New Invoice</a></li>
                         <li><a href="{{ route('invoice_approve_list') }}">Approve Invoice</a></li>
                         <li><a href="{{ route('consumption') }}">Consumption</a></li>
@@ -217,8 +217,19 @@
                 <span class="nav-text">Data Setting</span>
             </a>
             <ul aria-expanded="false">
-                <li><a href="{{ route('information.index',['cat_id' => 3]) }}">Employee</a></li>
-                 <li><a href="{{ route('employee_designation') }}">Designation Manage</a></li>
+                <li>
+                    <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                        <i class="fa-solid fa-user-group"></i>
+                        <span class="nav-text">Employee</span>
+                    </a>
+                    <ul aria-expanded="false">
+                        <li><a href="{{ route('information.index',['cat_id' => 3]) }}">Manage Employee</a></li>
+                        <li><a href="{{ route('inactive_employee') }}">Inactive Employee</a></li>
+                        <li><a href="{{ route('employee_designation') }}">Designation Manage</a></li>
+                    </ul>
+                </li>
+
+
                  <li><a href="{{ route('category') }}">Category Manage</a></li>
                  <li><a href="{{ route('unit') }}">Unit Manage</a></li>
                  <li><a href="{{ route('materials') }}">Materials Manage</a></li>

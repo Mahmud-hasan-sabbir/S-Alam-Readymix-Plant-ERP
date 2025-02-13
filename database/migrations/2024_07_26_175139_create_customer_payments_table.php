@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('check_num')->nullable();
             $table->date('check_date')->nullable();
             $table->integer('pay_amount')->nullable();
+            $table->string('discount_amount')->nullable();
             $table->text('remarks')->nullable();
             $table->integer('is_approve')->default(0);
             $table->unsignedBigInteger('user_id');
