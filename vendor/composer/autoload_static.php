@@ -393,8 +393,8 @@ class ComposerStaticInit3ecb934b1d3a5c5468d56fe7675cb715
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -691,6 +691,7 @@ class ComposerStaticInit3ecb934b1d3a5c5468d56fe7675cb715
         'App\\Http\\Controllers\\payment\\PaymentRecivedController' => __DIR__ . '/../..' . '/app/Http/Controllers/payment/PaymentRecivedController.php',
         'App\\Http\\Controllers\\purchase\\purchaseController' => __DIR__ . '/../..' . '/app/Http/Controllers/purchase/purchaseController.php',
         'App\\Http\\Controllers\\report\\reportController' => __DIR__ . '/../..' . '/app/Http/Controllers/report/reportController.php',
+        'App\\Http\\Controllers\\rowInvoiceController' => __DIR__ . '/../..' . '/app/Http/Controllers/rowInvoiceController.php',
         'App\\Http\\Controllers\\salaryController' => __DIR__ . '/../..' . '/app/Http/Controllers/salaryController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
@@ -737,6 +738,8 @@ class ComposerStaticInit3ecb934b1d3a5c5468d56fe7675cb715
         'App\\Models\\payment\\PaymentLand' => __DIR__ . '/../..' . '/app/Models/payment/PaymentLand.php',
         'App\\Models\\purchase\\Purchase' => __DIR__ . '/../..' . '/app/Models/purchase/Purchase.php',
         'App\\Models\\purchase\\PurchaseDetails' => __DIR__ . '/../..' . '/app/Models/purchase/PurchaseDetails.php',
+        'App\\Models\\rawInvoice' => __DIR__ . '/../..' . '/app/Models/rawInvoice.php',
+        'App\\Models\\rawInvoiceDetail' => __DIR__ . '/../..' . '/app/Models/rawInvoiceDetail.php',
         'App\\Models\\refundingPayment' => __DIR__ . '/../..' . '/app/Models/refundingPayment.php',
         'App\\Models\\roleAccess' => __DIR__ . '/../..' . '/app/Models/roleAccess.php',
         'App\\Models\\stockValue' => __DIR__ . '/../..' . '/app/Models/stockValue.php',

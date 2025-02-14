@@ -127,6 +127,18 @@
                         <li><a href="{{ route('consumption') }}">Consumption</a></li>
                     </ul>
                 </li>
+                <li>
+                    <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                        <i class="fa-solid fa-truck"></i>
+                        <span class="nav-text">Raw Sales</span>
+                    </a>
+                    <ul aria-expanded="false">
+
+                        <li><a href="{{ route('raw_invoice') }}">Raw Invoice</a></li>
+                        <li><a href="">Approve Invoice</a></li>
+                        <li><a href="">Consumption</a></li>
+                    </ul>
+                </li>
 
                 <li>
                     <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">

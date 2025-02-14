@@ -12,6 +12,7 @@ use App\Http\Controllers\account\AccountController;
 use App\Http\Controllers\invoice\invoiceController;
 use App\Http\Controllers\salaryController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\rowInvoiceController;
 
 
 
@@ -312,6 +313,17 @@ Route::group(['middleware' => ['auth']], function(){
            Route::post('/update_refun_data',[AccountController::class,'updateRefunData'])->name('update_refun_data');
            Route::get('/refunding_approve_list',[AccountController::class,'refundingApproveList'])->name('refunding_approve_list');
            Route::PATCH('/refunding_payment_approve/{id}',[AccountController::class,'refundingPaymentApprove'])->name('refunding_payment_approve');
+
+
+
+           // row invoice routeeerow_invoice
+
+           Route::get('raw_invoice',[rowInvoiceController::class,'rawInvoice'])->name('raw_invoice');
+          
+
+
+
+
 
 
 

@@ -23,7 +23,7 @@ class purchaseController extends Controller
      {
         $allcategory = category::all();
         $allunit = unit::all();
-        $allSupplier = SallerInformation::where('category',1)->get();
+        $allSupplier = SallerInformation::where('category',1)->where('Status','Active')->get();
         $allstoreName = storeName::all();
         $purchase_codes = Helper::IDGenerator(new Purchase, 'PO_No', 5, 'PO-NO');
 
