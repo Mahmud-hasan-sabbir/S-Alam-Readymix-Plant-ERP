@@ -18,23 +18,26 @@
                             <thead>
                             <tr>
                                 <th>SL.No</th>
+                                <th>RI-NO</th>
                                 <th>Date</th>
-                                <th>Supplier Name</th>
-                                <th>PO-No</th>
-                                <th>Total</th>
+                                <th>Customer Name</th>
+                                <th>Total Sale Amount</th>
+                                <th>discount</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody id="purchase_tbody">
-                                {{-- @foreach ($allPurchase as $key => $row)
-                                <!-- <tr style="{{ $row->is_approve == 0 ? 'background-color: #cfad57 !important; color: black' : '' }}"> -->
+                                @foreach ($allrawinvoice as $key => $row)
+                                <tr style="{{ $row->is_approve == 0 ? 'background-color: #cfad57 !important; color: black' : '' }}">
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $row->RI_No }}</td></td>
                                     <td>{{ date('d-m-y', strtotime($row->order_date)) }}
-                                    <td>{{ $row->supplierName->company_name }}</td>
-                                    <td>{{ $row->PO_No }}</td></td>
-                                    <td>{{ number_format($row->Total_purchase_amount) }}</td>
+                                    <td>{{ $row->customer->company_name }}</td>
+
+                                    <td>{{ number_format($row->Total_sale_amount) }}</td>
+                                    <td>{{ number_format($row->discount) }}</td>
                                     <td>
                                         @if($row->is_approve == 1)
                                             <span class="badge light badge-success">Success</span>
@@ -54,7 +57,7 @@
                                     </td>
 
                                 </tr>
-                                @endforeach --}}
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -95,11 +98,11 @@
             @{{ unit_name }}
         </td>
 
-       
+        <td><input type="hidden" name="stock_id[]" value="@{{stock_id}}">@{{stock_id}}</td>
 
         <td>
             <div class="input-group">
-                <input class="form-control mb-4 mb-md-0 truck_no" required name="truck_no[]">
+                <input class="form-control mb-4 mb-md-0 truck_no" required name="location[]">
             </div>
         </td>
 
@@ -117,7 +120,7 @@
             </div>
         </td>
 
-       
+
 
         <td>
             <div class="input-group">
@@ -154,6 +157,25 @@
     });
 });
 
+var selectedStockValue = 0; // Store selected stock value
+
+$(document).on('change', '#materialId', function() {
+    var materialId = $(this).val();
+
+    $.ajax({
+        url: '{{ route('get_stock_value') }}',
+        method: 'GET',
+        dataType: 'JSON',
+        data: { 'material_id': materialId },
+        success: function(response) {
+            selectedStockValue = response.stock_value ? response.stock_value : 0; // Store stock value
+            $('#stockValue').text(selectedStockValue); // Show in UI
+        }
+    });
+});
+
+
+
 $(document).on('change', '#categoryIdedit', function() {
     var id = $(this).val();
 
@@ -189,6 +211,8 @@ $(document).on('change', '#categoryIdedit', function() {
             var storeSelected = $('#storeId option:selected').text();
             var unitId = $('#unitId').val();
             var unitSelected = $('#unitId option:selected').text();
+            var materialId = $('#materialId').val();
+            var materialSelected = $('#materialId option:selected').text();
 
 
             if (supplierId && categoryId && materialId && storeId && unitId) {
@@ -203,7 +227,8 @@ $(document).on('change', '#categoryIdedit', function() {
                     store_id: storeId,
                     store_name: storeSelected,
                     unit_id: unitId,
-                    unit_name: unitSelected
+                    unit_name: unitSelected,
+                    stock_id: selectedStockValue,
                 };
 
                 var html = template(context);
@@ -249,63 +274,109 @@ $(document).on('change', '#categoryIdedit', function() {
         });
     });
 
-
     $(document).ready(function() {
-    $(document).on('input', '.unit_price, .quantity,', function() {
-        var unitName = $(this).closest("tr").find("td").eq(3).text().trim(); // Unit Name ধরার জন্য eq(3)
-        var amount = $(this).closest("tr").find("input.unit_price").val();
-      
-        var qty = $(this).closest("tr").find("input.quantity").val();
-        // var qtyconton = qty / 1000; // Convert quantity to tons
-        var truckfee = $(this).closest("tr").find("input.truckfee").val();
-        // var subtotal = (qtyconton * amount) - truckfee; // Calculate subtotal
-        var subtotal;
+    // Calculate subtotal when quantity or unit price is changed
+    $(document).on('input', '.unit_price, .quantity', function() {
+        var row = $(this).closest("tr");
+        var unitName = row.find("td").eq(3).text().trim();
+        var amount = parseFloat(row.find("input.unit_price").val()) || 0; // Unit Price
+        var qty = parseFloat(row.find("input.quantity").val()) || 0; // Quantity
+        var truckfee = parseFloat(row.find("input.truckfee").val()) || 0; // Truck Fee
 
-        if(['Kg', 'Pcs', 'Beg', 'Litter'].includes(unitName)) {
+        var subtotal = 0;
+
+        // Calculation based on unit type
+        if (['Kg', 'Pcs', 'Beg', 'Litter'].includes(unitName)) {
             subtotal = (qty * amount) - truckfee;
         } else {
-            var qtyconton = qty / 1000; // Convert quantity to tons
+            var qtyconton = qty / 1000; // Convert to tons
             subtotal = (qtyconton * amount) - truckfee;
         }
 
-            // if(unitName == 'Bricks')
-            // {
-            //     subtotal = (qty * amount) - truckfee;
-            // }else{
-            //     var qtyconton = qty / 1000; // Convert quantity to tons
-            //     subtotal = (qtyconton * amount) - truckfee;
-            // }
+        // Update subtotal field
+        row.find("input.subtotal").val(subtotal.toFixed(2));
 
-        $(this).closest("tr").find("input.subtotal").val(subtotal.toFixed(2)); // Update subtotal
-        totalAmountPrice(); // Update total and net amount
+        // Update total amount
+        totalAmountPrice();
     });
 
-    $(document).on('input', '#discount', function() {
-        totalAmountPrice(); // Update total and net amount on discount change
-    });
-
+    // Function to calculate total price including discount
     function totalAmountPrice() {
         var sum = 0;
 
-        // Sum all subtotals
+        // Loop through all subtotal fields and sum the values
         $(".subtotal").each(function() {
-            var value = $(this).val();
-            if (!isNaN(value) && value.length != 0) {
-                sum += parseFloat(value);
-            }
+            var value = parseFloat($(this).val()) || 0;
+            sum += value;
         });
 
         var discount = parseFloat($('#discount').val()) || 0;
         var totalWithDiscount = sum - discount;
 
-
+        // Update total fields
         $('#total').val(totalWithDiscount.toFixed(2));
         $('#netamount').val(totalWithDiscount.toFixed(2));
-
         $('#totaledit').val(totalWithDiscount);
         $('#total_amount').val(totalWithDiscount.toFixed(2));
     }
+
+    // Event listener for discount input change
+    $(document).on('input', '#discount', function() {
+        totalAmountPrice();
+    });
 });
+
+
+
+//     $(document).ready(function() {
+//     $(document).on('input', '.unit_price, .quantity,', function() {
+//         var unitName = $(this).closest("tr").find("td").eq(3).text().trim();
+//         var amount = $(this).closest("tr").find("input.unit_price").val();
+//         alert(amount);
+
+//         var qty = $(this).closest("tr").find("input.quantity").val();
+//         // var qtyconton = qty / 1000; // Convert quantity to tons
+//         var truckfee = $(this).closest("tr").find("input.truckfee").val();
+//         // var subtotal = (qtyconton * amount) - truckfee; // Calculate subtotal
+//         var subtotal;
+
+//         if(['Kg', 'Pcs', 'Beg', 'Litter'].includes(unitName)) {
+//             subtotal = (qty * amount) - truckfee;
+//         } else {
+//             var qtyconton = qty / 1000; // Convert quantity to tons
+//             subtotal = (qtyconton * amount) - truckfee;
+//         }
+
+
+//         $(this).closest("tr").find("input.subtotal").val(subtotal.toFixed(2)); // Update subtotal
+//         totalAmountPrice(); // Update total and net amount
+//     });
+//     $(document).on('input', '#discount', function() {
+//         totalAmountPrice(); // Update total and net amount on discount change
+//     });
+
+//     function totalAmountPrice() {
+//         var sum = 0;
+
+//         // Sum all subtotals
+//         $(".subtotal").each(function() {
+//             var value = $(this).val();
+//             if (!isNaN(value) && value.length != 0) {
+//                 sum += parseFloat(value);
+//             }
+//         });
+
+//         var discount = parseFloat($('#discount').val()) || 0;
+//         var totalWithDiscount = sum - discount;
+
+
+//         $('#total').val(totalWithDiscount.toFixed(2));
+//         $('#netamount').val(totalWithDiscount.toFixed(2));
+
+//         $('#totaledit').val(totalWithDiscount);
+//         $('#total_amount').val(totalWithDiscount.toFixed(2));
+//     }
+// });
 
 
 </script>
@@ -315,13 +386,14 @@ $(document).on('change', '#categoryIdedit', function() {
 <script>
      $(document).on('click', '.view', function() {
         var id = $(this).data('id');
+        $('#viewmodal').modal('show');
         $.ajax({
             url: '{{ route('purchase_edit') }}',
             method: 'GET',
             dataType: "JSON",
             data: {id: id},
             success: function(data) {
-                $('#viewmodal').modal('show');
+
                 $('#ordernoview').val(data.purchaseEdit.PO_No);
                 $('#inv_dateview').val(data.purchaseEdit.order_date);
                 $('#supplierIdview').val(data.purchaseEdit.supplier_id);

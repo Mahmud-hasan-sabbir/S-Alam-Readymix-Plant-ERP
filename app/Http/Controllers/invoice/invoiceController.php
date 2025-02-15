@@ -209,7 +209,7 @@ class invoiceController extends Controller
 
     public function storeConsumption(Request $request)
     {
-       
+
         // Check if quantity field is null
         if ($request->quantity == null) {
             $notification = [

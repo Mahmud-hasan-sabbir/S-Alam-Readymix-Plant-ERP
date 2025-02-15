@@ -31,9 +31,7 @@ return new class extends Migration
             $table->unsignedBigInteger('unit_id');
             $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');
 
-            $table->string('challan_no')->nullable();
-            $table->string('truck_no')->nullable();
-            $table->string('truck_fee')->nullable();
+            $table->string('location')->nullable();
             $table->integer('Qty')->nullable();
             $table->string('unit_price')->nullable();
             $table->string('sub_total')->nullable();

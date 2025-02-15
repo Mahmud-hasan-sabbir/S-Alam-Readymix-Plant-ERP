@@ -7,7 +7,7 @@
                 <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
             </div>
 
-            <form id="myForm" class="form-valide" action="{{ route('store_purchase') }}" method="POST" enctype="multipart/form-data">
+            <form id="myForm" class="form-valide" action="{{ route('store_rawinvoice') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body py-2">
                     <div class="row" id="main-row-data">
@@ -16,7 +16,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="orderNO" class="form-label">Order No : </label>
-                                <input type="text" readonly id="orderNO" name="po_no" value="{{ $rawsale_codes }}"  class="form-control">
+                                <input type="text" readonly id="orderNO" name="RI_No" value="{{ $rawsale_codes }}"  class="form-control">
 
                                 <!-- <label  class="col-form-label" name="po_no" id="inv_no"></label> -->
                             </div>
@@ -32,7 +32,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="supplierId" class="form-label">Customer : <span class="text-danger">*</span></label>
-                                <select name="supplier_name" id="supplierId" class="form-control dropdwon_select" required>
+                                <select name="customer_name" id="supplierId" class="form-control dropdwon_select" required>
                                     <option selected disabled>Select Customer</option>
                                     @foreach($allCustomer as $row)
                                         <option value="{{ $row->id}}">{{ $row->company_name}}</option>
@@ -44,7 +44,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="categoryId" class="form-label">
-                                    Category Name : <span class="text-danger">*</span> 
+                                    Category Name : <span class="text-danger">*</span>
                                 </label>
 
                                 <select name="" id="categoryId" class="form-control dropdwon_select" required>
@@ -106,6 +106,7 @@
                                         <th>Product</th>
                                         <th>store</th>
                                         <th>Unit</th>
+                                        <th>Stock Value</th>
                                         <th>Location</th>
                                         <th>Quantity (kg)</th>
                                         <th>Unit Price (Ton)</th>

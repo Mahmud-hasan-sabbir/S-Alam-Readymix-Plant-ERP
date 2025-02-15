@@ -319,7 +319,9 @@ Route::group(['middleware' => ['auth']], function(){
            // row invoice routeeerow_invoice
 
            Route::get('raw_invoice',[rowInvoiceController::class,'rawInvoice'])->name('raw_invoice');
-          
+           Route::get('/get_materials',[rowInvoiceController::class,'getMaterials'])->name('get_materials');
+           Route::get('/get_stock_value', [rowInvoiceController::class, 'getStockValue'])->name('get_stock_value');
+           Route::post('/store_rawinvoice',[rowInvoiceController::class,'storeRawinvoice'])->name('store_rawinvoice');
 
 
 
