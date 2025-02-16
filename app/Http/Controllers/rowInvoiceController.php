@@ -74,21 +74,83 @@ class rowInvoiceController extends Controller
             $rawinvoiceDetail->save();
         }
 
-        return redirect()->back()->with('success', 'Raw Invoice created successfully.');
+        return redirect()->route('rawinvoiceapprove_list')->with('success', 'Raw Invoice created successfully.');
 
 
-
-
-
-        // $stock = stockValue::where('material_id', $request->material_id)->first();
-        // if ($stock) {
-        //     $stock->cur_qty = $stock->cur_qty - $request->qty;
-        //     $stock->save();
-        // }
-
-        return redirect()->route('rawinvoice')->with('success', 'Raw Invoice created successfully.');
 
     }
+
+    public function rawinvoiceview(Request $request)
+    {
+        $rawinvoice = rawInvoice::with('rawInvoiceDetail')->where('id', $request->id)->first();
+        $invoicedetails = rawInvoiceDetail::where('rawInvoice_id', $request->id)
+        ->join('categories', 'raw_invoice_details.category_id', '=', 'categories.id')
+        ->join('materials', 'raw_invoice_details.material_id', '=', 'materials.id')
+        ->join('store_names', 'raw_invoice_details.store_id', '=', 'store_names.id')
+        ->join('units', 'raw_invoice_details.unit_id', '=', 'units.id')
+        ->select(
+            'raw_invoice_details.*',
+            'categories.name as category_name',
+            'materials.name as material_name',
+            'store_names.name as store_name',
+            'units.name as unit_name'
+        )
+        ->get();
+
+
+
+        return response()->json([
+            'rawinvoice' => $rawinvoice,
+            'invoicedetails' => $invoicedetails
+        ]);
+
+    }
+
+    public function rawinvoicedelete(Request $request)
+    {
+        $rawinvoice = rawInvoice::with('rawInvoiceDetail')->where('id', $request->id)->first();
+        $rawinvoice->delete();
+        return response()->json(['success' => 'Raw invoice has been deleted']);
+    }
+
+    public function rawinvoiceapproveList()
+    {
+        $approveList = rawInvoice::with('rawInvoiceDetail','customer')->where('is_approve', 0)->orderBy('id', 'desc')->get();
+        return view('layouts.pages.rawinvoice.rawinvoiceapprovelist', compact('approveList'));
+    }
+
+    public function rawinvoiceapprove($id)
+    {
+        // ইনভয়েস তথ্য চেক করা
+        $rawinvoice = rawInvoice::where('id', $id)->first();
+        if (!$rawinvoice) {
+            return response()->json(['error' => 'Invoice not found'], 404);
+        }
+
+        $rawinvoice->is_approve = 1;
+        $rawinvoice->save();
+
+        $rawinvoiceDetails = rawInvoiceDetail::where('rawInvoice_id', $id)->get();
+
+        foreach ($rawinvoiceDetails as $detail) {
+
+            $stock = stockValue::where('material_id', $detail->material_id)->first();
+
+            if ($stock) {
+                $stock->decrement('cur_qty', $detail->Qty); // cur_qty কমাবে
+                $stock->increment('sale_qty', $detail->Qty); // sale_qty বাড়াবে
+
+            }
+        }
+
+        return response()->json(['success' => true, 'message' => 'Raw invoice has been approved and stock updated']);
+    }
+
+
+
+
+
+
 
 
 

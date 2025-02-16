@@ -47,8 +47,8 @@
                                     </td>
                                     <td>
                                         @if($row->is_approve == 0)
-                                        <button class="btn btn-info light edit" data-id="{{ $row->id }}">
-                                            <i class="fa fa-pencil"></i>
+                                        <button class="btn btn-info light delete" data-id="{{ $row->id }}">
+                                            <i class="fa-solid fa-trash"></i>
                                         </button>
                                         @endif
                                         <button class="btn btn-success light view" data-id="{{ $row->id }}">
@@ -326,59 +326,6 @@ $(document).on('change', '#categoryIdedit', function() {
     });
 });
 
-
-
-//     $(document).ready(function() {
-//     $(document).on('input', '.unit_price, .quantity,', function() {
-//         var unitName = $(this).closest("tr").find("td").eq(3).text().trim();
-//         var amount = $(this).closest("tr").find("input.unit_price").val();
-//         alert(amount);
-
-//         var qty = $(this).closest("tr").find("input.quantity").val();
-//         // var qtyconton = qty / 1000; // Convert quantity to tons
-//         var truckfee = $(this).closest("tr").find("input.truckfee").val();
-//         // var subtotal = (qtyconton * amount) - truckfee; // Calculate subtotal
-//         var subtotal;
-
-//         if(['Kg', 'Pcs', 'Beg', 'Litter'].includes(unitName)) {
-//             subtotal = (qty * amount) - truckfee;
-//         } else {
-//             var qtyconton = qty / 1000; // Convert quantity to tons
-//             subtotal = (qtyconton * amount) - truckfee;
-//         }
-
-
-//         $(this).closest("tr").find("input.subtotal").val(subtotal.toFixed(2)); // Update subtotal
-//         totalAmountPrice(); // Update total and net amount
-//     });
-//     $(document).on('input', '#discount', function() {
-//         totalAmountPrice(); // Update total and net amount on discount change
-//     });
-
-//     function totalAmountPrice() {
-//         var sum = 0;
-
-//         // Sum all subtotals
-//         $(".subtotal").each(function() {
-//             var value = $(this).val();
-//             if (!isNaN(value) && value.length != 0) {
-//                 sum += parseFloat(value);
-//             }
-//         });
-
-//         var discount = parseFloat($('#discount').val()) || 0;
-//         var totalWithDiscount = sum - discount;
-
-
-//         $('#total').val(totalWithDiscount.toFixed(2));
-//         $('#netamount').val(totalWithDiscount.toFixed(2));
-
-//         $('#totaledit').val(totalWithDiscount);
-//         $('#total_amount').val(totalWithDiscount.toFixed(2));
-//     }
-// });
-
-
 </script>
 
 
@@ -386,21 +333,22 @@ $(document).on('change', '#categoryIdedit', function() {
 <script>
      $(document).on('click', '.view', function() {
         var id = $(this).data('id');
-        $('#viewmodal').modal('show');
+
         $.ajax({
-            url: '{{ route('purchase_edit') }}',
+            url: '{{ route('rawinvoiceview') }}',
             method: 'GET',
             dataType: "JSON",
             data: {id: id},
             success: function(data) {
 
-                $('#ordernoview').val(data.purchaseEdit.PO_No);
-                $('#inv_dateview').val(data.purchaseEdit.order_date);
-                $('#supplierIdview').val(data.purchaseEdit.supplier_id);
-                $('#totalview').val(data.purchaseEdit.Total_purchase_amount);
-                $('#remarksview').val(data.purchaseEdit.remarks);
+                $('#viewmodal').modal('show');
+                $('#RI_No').val(data.rawinvoice.RI_No);
+                $('#inv_dateview').val(data.rawinvoice.order_date);
+                $('#supplierIdview').val(data.rawinvoice.customer_id);
+                $('#totalview').val(data.rawinvoice.Total_sale_amount);
+                $('#remarksview').val(data.rawinvoice.remarks);
 
-                var discount = parseFloat(data.purchaseEdit.discount) || 0;
+                var discount = parseFloat(data.rawinvoice.discount) || 0;
                 $('#discountview').val(discount.toFixed(2));
 
 
@@ -410,25 +358,20 @@ $(document).on('change', '#categoryIdedit', function() {
 
                 var total = 0;
 
-                // var total = data.purchaseDetails.sum('sub_total');
+                data.invoicedetails.forEach(function(detail) {
 
-                // Loop through purchase details and append rows
-                data.purchaseDetails.forEach(function(detail) {
                     var subTotal = parseFloat(detail.sub_total) || 0;
                     var newRow = `
                     <tr>
-                        <td>${detail.category.name}</td>
-                        <td>${detail.material.name}</td>
-                        <td>${detail.store.name}</td>
-                        <td>${detail.unit.name}</td>
+                        <td>${detail.category_name}</td>
+                        <td>${detail.material_name}</td>
+                        <td>${detail.store_name}</td>
+                        <td>${detail.unit_name}</td>
                         <td>
-                            ${detail.challan_no}
+                            ${detail.location}
 
                         </td>
-                        <td>
-                            ${detail.truck_no}
 
-                        </td>
                         <td>
                             ${detail.Qty}
 
@@ -437,10 +380,7 @@ $(document).on('change', '#categoryIdedit', function() {
                             ${detail.unit_price}
 
                         </td>
-                        <td>
-                            ${detail.truck_fee}
 
-                        </td>
                         <td>
                             ${detail.sub_total}
 
@@ -463,6 +403,43 @@ $(document).on('change', '#categoryIdedit', function() {
             }
         });
     });
+</script>
+
+<script>
+   $(document).on('click', '.delete', function() {
+    var id = $(this).data('id');
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to delete this data!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '{{ route('rawinvoicedelete') }}',
+                method: 'GET',
+                data: {id: id},
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'Your file has been deleted.',
+                            icon: 'success'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                }
+            });
+        }
+    });
+});
+
+
 </script>
 
 

@@ -11,11 +11,11 @@
                 <div class="modal-body py-2">
                     <div class="row" id="main-row-data">
                         <input type="hidden" name="total_amount" id="total_amount">
-                        
+
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="form-label">Order No : </label>
-                                <input type="text" readonly id="ordernoview" name="po_no" class="form-control">
+                                <label class="form-label">RI:No : </label>
+                                <input type="text" readonly id="RI_No" name="po_no" class="form-control">
                             </div>
                         </div>
 
@@ -28,11 +28,11 @@
 
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label class="form-label">Supplier Name :<span class="text-danger">*</span></label>
+                                <label class="form-label">Customer Name :<span class="text-danger">*</span></label>
                                 <select name="" id="supplierIdview" @selected(true) disabled class="form-control dropdwon_select" required>
-                                    {{-- @foreach($allSupplier as $row)
-                                        <option value="{{ $row->id }}">{{ $row->company_name }}</option>
-                                    @endforeach --}}
+                                    @foreach($allCustomer as $row)
+                                        <option value="{{ $row->id}}">{{ $row->company_name}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -45,14 +45,13 @@
                                     <tr>
                                         <th>Category</th>
                                         <th>Product</th>
-                                        <th>Store</th>
+                                        <th>store</th>
                                         <th>Unit</th>
-                                        <th>Challan No</th>
-                                        <th>Truck No</th>
-                                        <th>Quantity (Kg)</th>
+                                        <th>Location</th>
+                                        <th>Quantity (kg)</th>
                                         <th>Unit Price (Ton)</th>
-                                        <th>Truck Fee</th>
-                                        <th>Total</th>
+                                        <th>Sub Total</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>

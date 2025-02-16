@@ -322,6 +322,11 @@ Route::group(['middleware' => ['auth']], function(){
            Route::get('/get_materials',[rowInvoiceController::class,'getMaterials'])->name('get_materials');
            Route::get('/get_stock_value', [rowInvoiceController::class, 'getStockValue'])->name('get_stock_value');
            Route::post('/store_rawinvoice',[rowInvoiceController::class,'storeRawinvoice'])->name('store_rawinvoice');
+           Route::get('/rawinvoiceview',[rowInvoiceController::class,'rawinvoiceview'])->name('rawinvoiceview');
+           Route::get('/rawinvoicedelete',[rowInvoiceController::class,'rawinvoicedelete'])->name('rawinvoicedelete');
+           Route::get('/rawinvoiceapprove_list',[rowInvoiceController::class,'rawinvoiceapproveList'])->name('rawinvoiceapprove_list');
+           Route::patch('/rawinvoiceapprove/{id}', [rowInvoiceController::class, 'rawinvoiceapprove'])->name('rawinvoiceapprove');
+
 
 
 

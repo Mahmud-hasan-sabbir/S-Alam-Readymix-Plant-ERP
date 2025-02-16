@@ -15,7 +15,7 @@
 
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="orderNO" class="form-label">Order No : </label>
+                                <label for="orderNO" class="form-label">RI:No</label>
                                 <input type="text" readonly id="orderNO" name="RI_No" value="{{ $rawsale_codes }}"  class="form-control">
 
                                 <!-- <label  class="col-form-label" name="po_no" id="inv_no"></label> -->
