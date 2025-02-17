@@ -136,7 +136,7 @@
 
                         <li><a href="{{ route('raw_invoice') }}">Raw Invoice</a></li>
                         <li><a href="{{ route('rawinvoiceapprove_list') }}">Approve Raw Invoice</a></li>
-                        <li><a href="">Consumption</a></li>
+
                     </ul>
                 </li>
 
